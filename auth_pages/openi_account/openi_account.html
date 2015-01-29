@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Login/Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="../openi-css/bootstrap.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="" id="loginModal">
+    <div class="modal-header">
+        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+        <h3>OPENi Account</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="well container" style="max-width: 640px;margin-top: 20px">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#login" data-toggle="tab">Login</a></li>
+                <li><a href="#create" data-toggle="tab">Create Account</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active in" id="login">
+
+                    <div class="container-fluid" style="background: #222222;padding: 20px; padding-top: 20px">
+
+                        <div>
+                            <legend style="border-bottom: 1px solid #888;">Login</legend>
+                        </div>
+
+                        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" style="margin-top: 25px">
+
+                            <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+                            <form id="loginform" class="form-horizontal" role="form">
+
+                                <div style="margin-bottom: 25px" class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input id="login-username" type="text" class="form-control" name="username" value=""
+                                           placeholder="Username">
+                                </div>
+
+                                <div style="margin-bottom: 25px" class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input id="login-password" type="password" class="form-control" name="password"
+                                           placeholder="Password">
+                                </div>
+
+
+                                <div class="input-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="login-remember" type="checkbox" name="remember" value="1">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                                <div style="margin-top:10px" class="form-group">
+                                    <!-- Button -->
+
+                                    <div class="col-sm-12 controls">
+                                        <a id="btn-login" href="#" class="btn btn-success" onclick="onClickLogInButton()">Login </a>
+                                    </div>
+                                </div>
+
+                                <!--
+                                <div class="form-group">
+                                    <div class="col-md-12 control">
+                                        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                            Don't have an account!
+                                            <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                                                Sign Up Here
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                -->
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="create">
+                    <div class="container-fluid" style="background: #222222;padding: 20px; padding-top: 20px">
+
+                        <div>
+                            <legend style="border-bottom: 1px solid #888;">Register</legend>
+                        </div>
+
+                        <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="margin-top: 25px">
+
+                            <form id="signupform" class="form-horizontal" role="form">
+
+                                <div id="signupalert" style="display:none" class="alert alert-danger">
+                                    <p>Error:</p>
+                                    <span></span>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="_openi_username" class="col-md-3 control-label">Username</label>
+
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="_openi_username"
+                                               placeholder="Enter your Username">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="_openi_passwd" class="col-md-3 control-label">Password</label>
+
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control" id="_openi_passwd"
+                                               placeholder="Enter your Password">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="_openi_conf_passwd" class="col-md-3 control-label">Confirm Password</label>
+
+                                    <div class="col-md-9">
+                                        <input type="password" class="form-control" id="_openi_conf_passwd"
+                                               placeholder="Enter your Password">
+                                    </div>
+                                </div>
+
+                                <div class="input-group" style="margin-bottom: 15px">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="accept-openi" type="checkbox" name="accept-openi" value="1">
+                                            Accept OPENi and create my Cloudlet
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div style="border-top: 1px solid #999; padding-top:20px;margin-bottom: 0" class="form-group">
+
+                                    <div class="form-group">
+                                        <!-- Button -->
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button onclick="onClickRegisterButton()" id="btn-signup" type="button" class="btn btn-info"><i
+                                                    class="icon-hand-right"></i> &nbsp Sign Up
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<button id="alertBtn" type="button" class="btn btn-primary hidden" data-toggle="modal" data-target=".modal">Alert</button>
+
+<div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Alert</h4>
+            </div>
+            <div class="modal-body custAlert">
+                :)
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="../openi_account/js/openi_account.js"></script>
+
+
+</body>
+</html>
