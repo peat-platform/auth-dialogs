@@ -86,8 +86,6 @@ var typesId = [
                     "Workout"
 ];
 
-
-
 // .indexOf("arrayElementValue")
 // ({"trg": "app", "type": "type", "id": "t_892173921h12zz1328319", "prm": ["read"], "grnt": "grant"})
 // ({"trg": "acc", "type": "object", "id": "o_324243252", "prm": ["create", "read", "write", "delete"], "grnt": "deny"})
