@@ -8,7 +8,7 @@ function getURLparam(name) {
 }
 
 if (!(getURLparam("jwt") == null)) {
-    var jwt = getURLparam("jwt")
+    var jwt = getURLparam("jwt");
     setCookie("jwt",jwt,1)
 }
 else {

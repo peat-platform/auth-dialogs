@@ -163,6 +163,8 @@ body {
 .f_link01 a:hover {
 	color:#8f8f8f;
 	text-decoration:none;
+	cursor: pointer;
+
 }
 
 
@@ -186,6 +188,7 @@ body {
 .f_link02 a:hover {
     color: #428bca;
 	text-decoration:none;
+	cursor: pointer;
 }
 
 
