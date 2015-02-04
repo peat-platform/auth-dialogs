@@ -223,7 +223,8 @@ function createUser(username, password) {
 
     var dt ={
         "username":username,
-        "password":password
+        "password":password,
+        "url_par":"logcrt"
     };
 
     dt = JSON.stringify(dt);
@@ -239,7 +240,10 @@ function createUser(username, password) {
             if ( res.indexOf("Error")!= -1 ) {
                 custAlert(res);
             } else{
-                window.open(res,"_self");
+
+                var togo = res + "?url_par=perm";
+
+                window.open(togo,"_self");
             };
 
 
@@ -324,7 +328,8 @@ function loginUser(username, password) {
 
     var dt ={
         "username":username,
-        "password":password
+        "password":password,
+        "url_par":"logcrt"
     };
 
     dt = JSON.stringify(dt);

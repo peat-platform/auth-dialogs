@@ -65,22 +65,142 @@ function postScript(method, postdata, path, addheaders, success, error) {
 /*================*/
 router.get('/account', function (req, res, next) {
     // save the api key, secret key and redirect URL to session
-    req.session.api_key = req.query.api_key;
-    req.session.secret = req.query.secret;
-    req.session.redURL = req.query.redirectURL;
 
-    //create an extra token for authentication
-    var payload = {
-        ip: req.connection.remoteAddress
-    };
 
-    // encode token with the predefined secret key
-    var token = jwt.encode(payload, seckeyenc);
+    if (req.query.url_par != "perm") {
 
-    req.session.authtoken = token;
+        req.session.api_key = req.query.api_key;
+        req.session.secret = req.query.secret;
+        req.session.redURL = req.query.redirectURL;
+
+        //create an extra token for authentication
+        var payload = {
+            ip: req.connection.remoteAddress
+        };
+
+        // encode token with the predefined secret key
+        var token = jwt.encode(payload, seckeyenc);
+
+        req.session.authtoken = token;
 
     //open openi_account page for username and password input
     res.sendfile(path.join('./auth_pages', 'openi_account', 'openi_account.html' /*path.basename(req.params.page) + '.html'*/));
+
+    }
+    else {
+
+    //open openi_account page for username and password input
+    //res.sendfile(path.join('./auth_pages', 'app_permissions', 'app_perm.html' /*path.basename(req.params.page) + '.html'*/));
+
+    //ID - name match for proper view
+
+    var typesName = [   "Account",
+        "Application",
+        "Article",
+        "Audio",
+        "Badge",
+        "Card",
+        "Checkin",
+        "Contact",
+        "Context",
+        "Device",
+        "Event",
+        "File",
+        "Game",
+        "Measurement",
+        "Note",
+        "Nutrition",
+        "Order",
+        "Photo",
+        "Place",
+        "Product",
+        "Question",
+        "Registeredapplication",
+        "Route",
+        "Service",
+        "Shop",
+        "Sleep",
+        "SocialAccount",
+        "SocialToken",
+        "Socialapp",
+        "Status",
+        "User",
+        "Video",
+        "Workout"
+    ];
+
+    var typesId = [
+        "Account",
+        "Application",
+        "t_892173921h12zz1328319",
+        "Audio",
+        "Badge",
+        "t_892173921h12zz1328320",
+        "Checkin",
+        "Contact",
+        "Context",
+        "t_7ea9e1db966accdd139222c9d33202bc-804",
+        "Event",
+        "t_892173921h12zz1328321",
+        "Game",
+        "t_30f13a9ed5288a2d7960ede0a9157e28-981",
+        "t_892173921h12zz1328322",
+        "Nutrition",
+        "Order",
+        "t_7378a4f73b49482f2fe19f512ada1af1-1267",
+        "t_892173921h12zz1328323",
+        "t_892173921h12zz1328324",
+        "Question",
+        "Registeredapplication",
+        "Route",
+        "Service",
+        "t_892173921h12zz1328325",
+        "Sleep",
+        "t_d25d6cb49f2226ab412057bce7ad9a99-735",
+        "SocialToken",
+        "Socialapp",
+        "Status",
+        "t_9f69b3afd7e3fcf9c15fdb0d150d1e5a-1331",
+        "Video",
+        "Workout"
+    ];
+
+
+    //get manifest from OPENi
+
+    //TEST: FIX IT
+    var testAppPermJson = [
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328319", "prm": ["read","write"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328320", "prm": ["read","create"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328321", "prm": ["read"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328322", "prm": ["read","delete"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328323", "prm": ["read","write"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328324", "prm": ["write"], "grnt": "grant"}
+    ];
+
+
+
+
+    //save manifest at session for accept
+    req.session.accpt_prm = testAppPermJson;
+
+    //prepare html string based on manifest
+
+    var app_perms = '';
+
+    testAppPermJson.forEach(function(obj){
+
+        app_perms+= ('<div class="contA">'+
+        '<div style="font-weight: bold">'+ typesName[typesId.indexOf(obj.id)] +'</div>'+
+        '<div>Permission Types: '+ obj.prm +'</div>'+
+        '</div>');
+
+    });
+
+    //send permissions page with permissions
+    res.render('app_perm', { app_perms: app_perms })
+    }
+
 });
 
 /*======================*/
@@ -89,7 +209,114 @@ router.get('/account', function (req, res, next) {
 router.get('/permissions', function (req, res, next) {
 
     //open openi_account page for username and password input
-    res.sendfile(path.join('./auth_pages', 'app_permissions', 'app_perm.html' /*path.basename(req.params.page) + '.html'*/));
+    //res.sendfile(path.join('./auth_pages', 'app_permissions', 'app_perm.html' /*path.basename(req.params.page) + '.html'*/));
+
+    //ID - name match for proper view
+
+    var typesName = [   "Account",
+        "Application",
+        "Article",
+        "Audio",
+        "Badge",
+        "Card",
+        "Checkin",
+        "Contact",
+        "Context",
+        "Device",
+        "Event",
+        "File",
+        "Game",
+        "Measurement",
+        "Note",
+        "Nutrition",
+        "Order",
+        "Photo",
+        "Place",
+        "Product",
+        "Question",
+        "Registeredapplication",
+        "Route",
+        "Service",
+        "Shop",
+        "Sleep",
+        "SocialAccount",
+        "SocialToken",
+        "Socialapp",
+        "Status",
+        "User",
+        "Video",
+        "Workout"
+    ];
+
+    var typesId = [
+        "Account",
+        "Application",
+        "t_892173921h12zz1328319",
+        "Audio",
+        "Badge",
+        "t_892173921h12zz1328320",
+        "Checkin",
+        "Contact",
+        "Context",
+        "t_7ea9e1db966accdd139222c9d33202bc-804",
+        "Event",
+        "t_892173921h12zz1328321",
+        "Game",
+        "t_30f13a9ed5288a2d7960ede0a9157e28-981",
+        "t_892173921h12zz1328322",
+        "Nutrition",
+        "Order",
+        "t_7378a4f73b49482f2fe19f512ada1af1-1267",
+        "t_892173921h12zz1328323",
+        "t_892173921h12zz1328324",
+        "Question",
+        "Registeredapplication",
+        "Route",
+        "Service",
+        "t_892173921h12zz1328325",
+        "Sleep",
+        "t_d25d6cb49f2226ab412057bce7ad9a99-735",
+        "SocialToken",
+        "Socialapp",
+        "Status",
+        "t_9f69b3afd7e3fcf9c15fdb0d150d1e5a-1331",
+        "Video",
+        "Workout"
+    ];
+
+
+    //get manifest from OPENi
+
+    //TEST: FIX IT
+    var testAppPermJson = [
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328319", "prm": ["read","write"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328320", "prm": ["read","create"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328321", "prm": ["read"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328322", "prm": ["read","delete"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328323", "prm": ["read","write"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328324", "prm": ["write"], "grnt": "grant"}
+    ];
+
+
+    //save manifest at session for accept
+    req.session.accpt_prm = testAppPermJson;
+
+    //prepare html string based on manifest
+
+    var app_perms = '';
+
+    testAppPermJson.forEach(function(obj){
+
+        app_perms+= ('<div class="contA">'+
+        '<div style="font-weight: bold">'+ typesName[typesId.indexOf(obj.id)] +'</div>'+
+        '<div>Permission Types: '+ obj.prm +'</div>'+
+        '</div>');
+
+    });
+
+    //send permissions page with permissions
+    res.render('app_perm', { app_perms: app_perms })
+
 });
 
 /*==================*/
@@ -104,7 +331,6 @@ router.post('/login', function (req, res, next) {
 
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
-    console.log(tok);
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -136,9 +362,9 @@ router.post('/login', function (req, res, next) {
                 res.send(datat.error);
             }
         }, function () {
-            res.status(500).send('Internal error');
+
+            res.status(500).send('OPENi internal error');
         });
-        //console.log(req.session.auth);
     } else {
         //jwt auth failed
         res.status(401).send('Authentication failed')
@@ -173,6 +399,8 @@ router.post('/create', function (req, res, next) {
             "password": req.body.password
         };
 
+
+
         postScript("POST", data, path1, null, function (dat) {
             //success
             if (typeof dat.error != 'undefined') {
@@ -192,21 +420,22 @@ router.post('/create', function (req, res, next) {
 
                     if (typeof data3.error == 'undefined') {
 
-                        var redlink = "http://127.0.0.1:3000/auth/permissions";
-
-                        var nexttt = redlink + "?OUST=" + data3.session;
+                        var redlink = "http://127.0.0.1:3000/auth/account";
+                        req.session.token = data3.session;
+                        var nexttt = redlink;
                         res.send(nexttt);
                     } else {
+                        //OPENi returned error
                         res.send(data3.error);
                     }
                 }, function () {
-                    res.status(500).send('Internal error');
+                    res.status(500).send('OPENi Internal error: session token generation failed');
                 });
             }
         }, function () {
             //error;
             console.log("error");
-            res.status(500).send('Internal error');
+            res.status(500).send('OPENi Internal error: register failed');
         });
 
     } else {
@@ -214,5 +443,104 @@ router.post('/create', function (req, res, next) {
         res.status(401).send('Authentication failed')
     }
 });
+
+/*================*/
+/* register accept permissions */
+/*================*/
+
+router.post('/accept', function (req, res, next) {
+    // post permissions to openi
+
+    //first step: validate token
+
+    var validated = false;
+
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
+    if (tok.hasOwnProperty("ip")) {
+        if (tok.ip == req.connection.remoteAddress) {
+            validated = true;
+        }
+    }
+
+    //proceed only if validated
+    if (validated) {
+
+
+        var path = "api/v1/permissions";
+
+        //prepare the data to send to OPENi
+        var data= [];
+
+       req.session.accpt_prm.forEach(function (obj){
+
+           obj.prm.forEach( function (obj2){
+
+               var data_i =
+               {
+                   "type": obj.type,
+                   "ref": obj.id,
+                   "access_type": obj2,
+                   "access_level": obj.trg
+               };
+               data.push(data_i);
+           });});
+
+        console.log(data);
+
+        var redurl = req.session.redURL;
+        var toki = req.session.token;
+
+        var headi = {
+            "authorization": toki
+        };
+
+        postScript("POST", data, path, headi, function (datat) {
+            //success: send url so that client redirects
+            // redirect to redirectURI only if there is no error
+            if (typeof datat.error == 'undefined') {
+                var nexttt = redurl + "?OUST=" +toki;
+                res.send(nexttt);
+            } else {
+                res.send(datat.error);
+            }
+        }, function () {
+            res.status(500).send('OPENi Internal error: accepting permissions failed');
+        });
+    } else {
+        //jwt auth failed
+        res.status(401).send('Authentication failed')
+    }
+});
+
+
+/*================*/
+/* register decline permissions */
+/*================*/
+
+router.post('/cancel', function (req, res, next) {
+
+    //first step: validate token
+
+    var validated = false;
+
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
+    if (tok.hasOwnProperty("ip")) {
+        if (tok.ip == req.connection.remoteAddress) {
+            validated = true;
+        }
+    }
+
+
+    //proceed only if validated
+    if (validated) {
+
+        var linkg = req.session.redURL + "?OUST=" +req.session.token + "?ERROR=error_permissions";
+        res.send(linkg);
+
+    }
+});
+
 
 module.exports = router;
