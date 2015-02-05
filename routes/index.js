@@ -76,9 +76,9 @@ router.get('/account', function (req, res, next) {
         sess.secret = req.query.secret;
         sess.redURL = req.query.redirectURL;
 
-        req.session.api_key = req.query.api_key;
+/*        req.session.api_key = req.query.api_key;
         req.session.secret = req.query.secret;
-        req.session.redURL = req.query.redirectURL;
+        req.session.redURL = req.query.redirectURL;*/
 
         //create an extra token for authentication
         var payload = {
@@ -88,7 +88,7 @@ router.get('/account', function (req, res, next) {
         // encode token with the predefined secret key
         var token = jwt.encode(payload, seckeyenc);
 
-        req.session.authtoken = token;
+        //req.session.authtoken = token;
         sess.authtoken = token;
 
     //open openi_account page for username and password input
