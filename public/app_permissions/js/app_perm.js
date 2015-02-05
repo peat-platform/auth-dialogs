@@ -111,16 +111,12 @@ function getURLparam(name) {
 $(" #accept_permapp").click(function(){
     //window.location.replace(getCookie("redirectURI") + "?OUST=" + getCookie("jwt") );
 
-
-
     //for now we accept everything.
     var dt = {
         "all":'yes'
     };
 
-
     dt = JSON.stringify(dt);
-
 
     $.ajax({
         type: "POST",
@@ -137,15 +133,12 @@ $(" #accept_permapp").click(function(){
 
             }
 
-
         },
         error: function(error) {
             console.log("failed with "+ error.status);
         }
 
     });
-
-
 
 });
 

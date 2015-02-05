@@ -12,7 +12,7 @@ var bodyParser = require('body-parser');
 //var users = require('./routes/users');
 
 var app = express();
-app.use(exp_session({secret: 'oMF81IOFsZ0bvzSdcBVr',saveUninitialized: true,resave: true}));
+//app.use(exp_session({secret: 'oMF81IOFsZ0bvzSdcBVr', saveUninitialized: true, resave: true}));
 
 
 var routes = require('./routes/index');
@@ -52,12 +52,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(exp_session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
-}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(exp_session({
+    secret: 'Op3n1@#',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 60000 }
+}));
+
 
 app.use('/auth', routes);
 //app.use('/users', users);

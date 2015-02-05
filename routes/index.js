@@ -28,8 +28,6 @@ function postScript(method, postdata, path, addheaders, success, error) {
         }
     }
 
-
-
     options = {
         host: '10.130.34.17',
         port: 443,
@@ -40,7 +38,6 @@ function postScript(method, postdata, path, addheaders, success, error) {
     };
 
     console.log(post_data);
-
 
     req = https.request(options, function (res) {
         res.setEncoding('utf-8');
@@ -74,15 +71,14 @@ function postScript(method, postdata, path, addheaders, success, error) {
 router.get('/account', function (req, res, next) {
     // save the api key, secret key and redirect URL to session
 
-
         sess = req.session;
         sess.api_key = req.query.api_key;
         sess.secret = req.query.secret;
         sess.redURL = req.query.redirectURL;
 
-        //req.session.api_key = req.query.api_key;
-        //req.session.secret = req.query.secret;
-        //req.session.redURL = req.query.redirectURL;
+        req.session.api_key = req.query.api_key;
+        req.session.secret = req.query.secret;
+        req.session.redURL = req.query.redirectURL;
 
         //create an extra token for authentication
         var payload = {
@@ -92,15 +88,11 @@ router.get('/account', function (req, res, next) {
         // encode token with the predefined secret key
         var token = jwt.encode(payload, seckeyenc);
 
-        //req.session.authtoken = token;
+        req.session.authtoken = token;
         sess.authtoken = token;
-
 
     //open openi_account page for username and password input
     res.sendfile(path.join('./auth_pages', 'openi_account', 'openi_account.html' /*path.basename(req.params.page) + '.html'*/));
-
-
-
 
 });
 
@@ -225,7 +217,7 @@ router.get('/permissions', function (req, res, next) {
 
     testAppPermJson.forEach(function(obj){
 
-        app_perms+= ('<div class="contA">'+
+        app_perms += ('<div class="contA">'+
         '<div style="font-weight: bold">'+ typesName[typesId.indexOf(obj.id)] +'</div>'+
         '<div>Permission Types: '+ obj.prm +'</div>'+
         '</div>');
@@ -395,7 +387,6 @@ router.post('/create', function (req, res, next) {
 /*================*/
 /* register accept permissions */
 /*================*/
-
 router.post('/accept', function (req, res, next) {
     // post permissions to openi
 
@@ -467,7 +458,6 @@ router.post('/accept', function (req, res, next) {
 /*================*/
 /* register decline permissions */
 /*================*/
-
 router.post('/cancel', function (req, res, next) {
 
     //first step: validate token
