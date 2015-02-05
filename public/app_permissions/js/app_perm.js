@@ -160,7 +160,8 @@ $(" #cancel_permapp").click(function(){
         data: "",
         success: function (res){
 
-            if ( res.indexOf("ERROR")== -1 ) {
+            if ( res.indexOf("ERROR")!= -1 ) {
+                //custAlert("Warning: Permissions denied");
                 window.open(res,"_self")
             } else {
 

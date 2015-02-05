@@ -23,10 +23,12 @@ function postScript(method, postdata, path, addheaders, success, error) {
     if (typeof addheaders === 'object') {
         for (obj in addheaders) {
             if (addheaders.hasOwnProperty(obj)) {
-                headers[obj] = addheaders.obj;
+                headers[obj] = addheaders[obj];
             }
         }
     }
+
+
 
     options = {
         host: '10.130.34.17',
@@ -36,6 +38,9 @@ function postScript(method, postdata, path, addheaders, success, error) {
         headers: headers,
         rejectUnauthorized: false
     };
+
+    console.log(post_data);
+
 
     req = https.request(options, function (res) {
         res.setEncoding('utf-8');
@@ -144,7 +149,14 @@ router.get('/permissions', function (req, res, next) {
         "Status",
         "User",
         "Video",
-        "Workout"
+        "Workout",
+        "File Post",
+        "Comment Post",
+        "Like Post",
+        "Location Post",
+        "Photo Post",
+        "Article Post"
+
     ];
 
     var typesId = [
@@ -180,7 +192,13 @@ router.get('/permissions', function (req, res, next) {
         "Status",
         "t_9f69b3afd7e3fcf9c15fdb0d150d1e5a-1331",
         "Video",
-        "Workout"
+        "Workout",
+        "t_08f64bf281f848387e0014e133f83b5e-590",
+        "t_0d6f8e52d02625bb0bdea50044dd0302-485",
+        "t_0f1acbc52b18e4f289cbb4fd5726d6d3-268",
+        "t_0fbf34ea379f8703510356679f0523cc-384",
+        "t_16cad6c574a2d32b58e87b5869ce6ed0-705",
+        "t_1abc0b9d6939405281305b0a0c179ee8-601"
     ];
 
 
@@ -188,12 +206,12 @@ router.get('/permissions', function (req, res, next) {
 
     //TEST: FIX IT
     var testAppPermJson = [
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328319", "prm": ["read","write"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328320", "prm": ["read","create"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328321", "prm": ["read"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328322", "prm": ["read","delete"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328323", "prm": ["read","write"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_892173921h12zz1328324", "prm": ["write"], "grnt": "grant"}
+        {"trg": "app", "type": "type", "id": "t_08f64bf281f848387e0014e133f83b5e-590", "prm": ["CREATE","READ"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_0d6f8e52d02625bb0bdea50044dd0302-485", "prm": ["READ","CREATE"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_0f1acbc52b18e4f289cbb4fd5726d6d3-268", "prm": ["READ"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_0fbf34ea379f8703510356679f0523cc-384", "prm": ["READ","DELETE"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_16cad6c574a2d32b58e87b5869ce6ed0-705", "prm": ["READ","UPDATE"], "grnt": "grant"},
+        {"trg": "app", "type": "type", "id": "t_1abc0b9d6939405281305b0a0c179ee8-601", "prm": ["UPDATE"], "grnt": "grant"}
     ];
 
 
@@ -399,7 +417,7 @@ router.post('/accept', function (req, res, next) {
     if (validated) {
 
 
-        var path = "api/v1/permissions";
+        var path = "/api/v1/permissions";
 
         //prepare the data to send to OPENi
         var data= [];
@@ -424,7 +442,7 @@ router.post('/accept', function (req, res, next) {
         var toki = sess.token;
 
         var headi = {
-            "authorization": toki
+            "Authorization": toki
         };
 
         postScript("POST", data, path, headi, function (datat) {
