@@ -163,7 +163,6 @@ $(" #cancel_permapp").click(function(){
             if ( res.indexOf("ERROR")== -1 ) {
                 window.open(res,"_self")
             } else {
-                custAlert("Warning: permissions denied");
 
                 window.open(res,"_self")
 

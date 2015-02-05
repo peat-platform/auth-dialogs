@@ -12,11 +12,12 @@ var bodyParser = require('body-parser');
 //var users = require('./routes/users');
 
 var app = express();
+app.use(exp_session({secret: 'oMF81IOFsZ0bvzSdcBVr',saveUninitialized: true,resave: true}));
+
 
 var routes = require('./routes/index');
 
 //app.set('jwtTokenSecret', 'oMF81IOFsZ0bvzSdcBVr');
-
 
 
 app.use(function (req, res, next) {

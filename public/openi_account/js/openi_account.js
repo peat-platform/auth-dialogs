@@ -241,9 +241,7 @@ function createUser(username, password) {
                 custAlert(res);
             } else{
 
-                var togo = res + "?url_par=perm";
-
-                window.open(togo,"_self");
+               document.write(res);
             };
 
 
