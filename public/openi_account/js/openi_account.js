@@ -332,7 +332,7 @@ function loginUser(username, password) {
 
     $.ajax({
         type: "POST",
-        url:"http://localhost:3000/auth/login",
+        url:"http://"+window.location.host+"/auth/login",
         contentType: "application/json",
         crossDomain: true,
         data: dt,

@@ -120,7 +120,7 @@ $(" #accept_permapp").click(function(){
 
     $.ajax({
         type: "POST",
-        url:"http://localhost:3000/auth/accept",
+        url:"http://"+window.location.host+"/auth/accept",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
