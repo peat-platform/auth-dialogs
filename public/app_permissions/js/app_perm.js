@@ -120,7 +120,7 @@ $(" #accept_permapp").click(function(){
 
     $.ajax({
         type: "POST",
-        url:"http://127.0.0.1:3000/auth/accept",
+        url:"http://localhost:3000/auth/accept",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
@@ -147,7 +147,7 @@ $(" #cancel_permapp").click(function(){
 
     $.ajax({
         type: "POST",
-        url:"http://127.0.0.1:3000/auth/cancel",
+        url:"http://"+window.location.host+"/auth/cancel",
         contentType: "application/json",
         crossDomain: true,
         data: "",

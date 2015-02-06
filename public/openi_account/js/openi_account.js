@@ -231,7 +231,7 @@ function createUser(username, password) {
 
     $.ajax({
         type: "POST",
-        url:"http://localhost:3000/auth/create",
+        url:"http://"+window.location.host+"/auth/create",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
@@ -240,10 +240,8 @@ function createUser(username, password) {
             if ( res.indexOf("Error")!= -1 ) {
                 custAlert(res);
             } else{
-
-               document.write(res);
+               window.location.href = "./permissions"
             };
-
 
         },
         error: function(error) {

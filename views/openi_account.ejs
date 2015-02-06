@@ -10,7 +10,7 @@
     <!-- Latest compiled and minified CSS -->
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="../openi-css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="../openi-css/openi_account.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
@@ -72,7 +72,7 @@
                                     <!-- Button -->
 
                                     <div class="col-sm-12 controls">
-                                        <a id="btn-login" href="#" class="btn btn-success">Login </a>
+                                        <a id="btn-login" href="#" class="btn btn-success" onclick="onClickLogInButton()">Login </a>
                                     </div>
                                 </div>
 
@@ -152,8 +152,8 @@
                                     <div class="form-group">
                                         <!-- Button -->
                                         <div class="col-md-offset-3 col-md-9">
-                                            <button id="btn-signup" type="button" class="btn btn-info"><i
-                                                    class="icon-hand-right"></i> &nbsp Sign Up
+                                            <button onclick="onClickRegisterButton()" id="btn-signup" type="button" class="btn btn-info"><i
+                                                        class="icon-hand-right"></i> &nbsp Sign Up
                                             </button>
                                         </div>
                                     </div>
@@ -188,7 +188,8 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<script src="js/openi_account.js"></script>
+<script src="../openi_account/js/openi_account.js"></script>
+<script src="../app_permissions/js/app_perm.js"></script>
 
 </body>
 </html>

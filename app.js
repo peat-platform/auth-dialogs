@@ -5,20 +5,12 @@ var logger = require('morgan');
 var exp_session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-
-
-
-//var users = require('./routes/users');
+var redis = require("redis").createClient("6379", "10.130.34.17");
+var RedisStore = require("connect-redis")(exp_session);
 
 var app = express();
-//app.use(exp_session({secret: 'oMF81IOFsZ0bvzSdcBVr', saveUninitialized: true, resave: true}));
-
 
 var routes = require('./routes/index');
-
-//app.set('jwtTokenSecret', 'oMF81IOFsZ0bvzSdcBVr');
-
 
 app.use(function (req, res, next) {
 
@@ -39,27 +31,25 @@ app.use(function (req, res, next) {
     next();
 });
 
-
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(exp_session({
     secret: 'Op3n1@#',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 60000 }
+    store: new RedisStore({ host: '10.130.34.17', port: 6379 })
 }));
-
 
 app.use('/auth', routes);
 //app.use('/users', users);
@@ -94,7 +84,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 
 module.exports = app;

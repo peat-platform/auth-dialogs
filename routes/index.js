@@ -1,13 +1,10 @@
 var express = require('express');
-//var express = require('express-session');
 var router = express.Router();
 var path = require('path');
 var https = require('https');
 var jwt = require('jwt-simple');
 
 var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
-
-var sess;
 
 
 function postScript(method, postdata, path, addheaders, success, error) {
@@ -37,12 +34,12 @@ function postScript(method, postdata, path, addheaders, success, error) {
         rejectUnauthorized: false
     };
 
-    console.log(post_data);
+    //console.log(post_data);
 
     req = https.request(options, function (res) {
         res.setEncoding('utf-8');
 
-        console.log("hereeee");
+        //console.log("hereeee");
 
         var responseString = '';
 
@@ -65,34 +62,37 @@ function postScript(method, postdata, path, addheaders, success, error) {
     req.end();
 }
 
+router.post("/sendPerms", function (req, res) {
+    req.session.appPermJson = "mple"
+    res.status = 200;
+    res.end()
+})
+
 /*================*/
 /* GET home page. */
 /*================*/
 router.get('/account', function (req, res, next) {
     // save the api key, secret key and redirect URL to session
 
-        sess = req.session;
-        sess.api_key = req.query.api_key;
-        sess.secret = req.query.secret;
-        sess.redURL = req.query.redirectURL;
+    console.log(req.sessionID)
+    console.log("\n\n")
 
-/*        req.session.api_key = req.query.api_key;
-        req.session.secret = req.query.secret;
-        req.session.redURL = req.query.redirectURL;*/
+    req.session.api_key = req.query.api_key;
+    req.session.secret = req.query.secret;
+    req.session.redURL = req.query.redirectURL;
 
-        //create an extra token for authentication
-        var payload = {
-            ip: req.connection.remoteAddress
-        };
+    //create an extra token for authentication
+    var payload = {
+        ip: req.connection.remoteAddress
+    };
 
-        // encode token with the predefined secret key
-        var token = jwt.encode(payload, seckeyenc);
+    // encode token with the predefined secret key
+    var token = jwt.encode(payload, seckeyenc);
 
-        //req.session.authtoken = token;
-        sess.authtoken = token;
+    req.session.authtoken = token;
+    //sess.authtoken = token;
 
-    //open openi_account page for username and password input
-    res.sendfile(path.join('./auth_pages', 'openi_account', 'openi_account.html' /*path.basename(req.params.page) + '.html'*/));
+    res.render("openi_account")
 
 });
 
@@ -105,11 +105,12 @@ router.get('/permissions', function (req, res, next) {
     //res.sendfile(path.join('./auth_pages', 'app_permissions', 'app_perm.html' /*path.basename(req.params.page) + '.html'*/));
 
     //ID - name match for proper view
+    console.log(req.sessionID)
+    console.log("\n\n")
+    //sess = req.session;
 
-    sess = req.session;
 
-
-    var typesName = [   "Account",
+    var typesName = ["Account",
         "Application",
         "Article",
         "Audio",
@@ -198,34 +199,71 @@ router.get('/permissions', function (req, res, next) {
 
     //TEST: FIX IT
     var testAppPermJson = [
-        {"trg": "app", "type": "type", "id": "t_08f64bf281f848387e0014e133f83b5e-590", "prm": ["CREATE","READ"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_0d6f8e52d02625bb0bdea50044dd0302-485", "prm": ["READ","CREATE"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_0f1acbc52b18e4f289cbb4fd5726d6d3-268", "prm": ["READ"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_0fbf34ea379f8703510356679f0523cc-384", "prm": ["READ","DELETE"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_16cad6c574a2d32b58e87b5869ce6ed0-705", "prm": ["READ","UPDATE"], "grnt": "grant"},
-        {"trg": "app", "type": "type", "id": "t_1abc0b9d6939405281305b0a0c179ee8-601", "prm": ["UPDATE"], "grnt": "grant"}
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_08f64bf281f848387e0014e133f83b5e-590",
+            "prm": ["CREATE", "READ"],
+            "grnt": "grant"
+        },
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_0d6f8e52d02625bb0bdea50044dd0302-485",
+            "prm": ["READ", "CREATE"],
+            "grnt": "grant"
+        },
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_0f1acbc52b18e4f289cbb4fd5726d6d3-268",
+            "prm": ["READ"],
+            "grnt": "grant"
+        },
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_0fbf34ea379f8703510356679f0523cc-384",
+            "prm": ["READ", "DELETE"],
+            "grnt": "grant"
+        },
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_16cad6c574a2d32b58e87b5869ce6ed0-705",
+            "prm": ["READ", "UPDATE"],
+            "grnt": "grant"
+        },
+        {
+            "trg": "app",
+            "type": "type",
+            "id": "t_1abc0b9d6939405281305b0a0c179ee8-601",
+            "prm": ["UPDATE"],
+            "grnt": "grant"
+        }
     ];
 
 
     //save manifest at session for accept
     //req.session.accpt_prm = testAppPermJson;
-    sess.accpt_prm = testAppPermJson;
+    req.session.accpt_prm = testAppPermJson;
 
     //prepare html string based on manifest
 
     var app_perms = '';
 
-    testAppPermJson.forEach(function(obj){
+    testAppPermJson.forEach(function (obj) {
 
-        app_perms += ('<div class="contA">'+
-        '<div style="font-weight: bold">'+ typesName[typesId.indexOf(obj.id)] +'</div>'+
-        '<div>Permission Types: '+ obj.prm +'</div>'+
+        app_perms += ('<div class="contA">' +
+        '<div style="font-weight: bold">' + typesName[typesId.indexOf(obj.id)] + '</div>' +
+        '<div>Permission Types: ' + obj.prm + '</div>' +
         '</div>');
 
     });
 
+    res.locals.session = req.session
     //send permissions page with permissions
-    res.render('app_perm', { app_perms: app_perms })
+    res.render('app_perm.ejs', {app_perms: app_perms})
 
 });
 
@@ -235,15 +273,10 @@ router.get('/permissions', function (req, res, next) {
 router.post('/login', function (req, res, next) {
     // post authorization to openi
 
-    //first step: validate token
-
-    sess = req.session;
     var validated = false;
 
     //var tok = jwt.decode(req.session.authtoken, seckeyenc);
-    var tok = jwt.decode(sess.authtoken, seckeyenc);
-
-
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -265,16 +298,16 @@ router.post('/login', function (req, res, next) {
         var data = {
             "username": req.body.username,
             "password": req.body.password,
-            "api_key": sess.api_key,
-            "secret": sess.secret
+            "api_key": req.session.api_key,
+            "secret": req.session.secret
         };
 
         //var redurl = req.session.redURL;
 
-        var redurl = sess.redURL;
+        var redurl = req.session.redURL;
 
 
-        console.log(data);
+        //console.log(data);
 
         postScript("POST", data, path, null, function (datat) {
             //success: send url so that client redirects
@@ -301,14 +334,15 @@ router.post('/login', function (req, res, next) {
 router.post('/create', function (req, res, next) {
     // post authorization to openi
     //Validate first with jwt key
-
-    sess = req.session;
+    console.log(req.sessionID)
+    console.log("\n\n")
+    //sess = req.session;
 
     var validated = false;
     //var tok = jwt.decode(req.session.authtoken, seckeyenc);
-    var tok = jwt.decode(sess.authtoken, seckeyenc);
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
-    console.log(tok);
+    //console.log(tok);
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -327,8 +361,6 @@ router.post('/create', function (req, res, next) {
             "password": req.body.password
         };
 
-
-
         postScript("POST", data, path1, null, function (dat) {
             //success
             if (typeof dat.error != 'undefined') {
@@ -345,10 +377,9 @@ router.post('/create', function (req, res, next) {
                 var data2 = {
                     "username": req.body.username,
                     "password": req.body.password,
-                    "api_key": sess.api_key,
-                    "secret": sess.secret
+                    "api_key": req.session.api_key,
+                    "secret": req.session.secret
                 };
-
 
                 postScript("POST", data2, path2, null, function (data3) {
                     //success
@@ -359,11 +390,11 @@ router.post('/create', function (req, res, next) {
                         var redlink = "http://127.0.0.1:3000/auth/permissions";
 
                         //req.session.token = data3.session;
-                        sess.token = data3.session;
+                        req.session.token = data3.session;
 
                         var nexttt = redlink;
                         //res.redirect('/auth/permissions');
-                        res.redirect('/auth/permissions');
+                        res.send('OK');
                     } else {
                         //OPENi returned error
                         res.send(data3.error);
@@ -391,12 +422,13 @@ router.post('/accept', function (req, res, next) {
     // post permissions to openi
 
     //first step: validate token
-
+    console.log(req.sessionID)
+    console.log("\n\n")
     var validated = false;
 
     //sess = req.session;
 
-    var tok = jwt.decode(sess.authtoken, seckeyenc);
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -407,30 +439,30 @@ router.post('/accept', function (req, res, next) {
     //proceed only if validated
     if (validated) {
 
-
         var path = "/api/v1/permissions";
 
         //prepare the data to send to OPENi
-        var data= [];
+        var data = [];
 
-       sess.accpt_prm.forEach(function (obj){
+        req.session.accpt_prm.forEach(function (obj) {
 
-           obj.prm.forEach( function (obj2){
+            obj.prm.forEach(function (obj2) {
 
-               var data_i =
-               {
-                   "type": obj.type,
-                   "ref": obj.id,
-                   "access_type": obj2,
-                   "access_level": obj.trg
-               };
-               data.push(data_i);
-           });});
+                var data_i =
+                {
+                    "type": obj.type,
+                    "ref": obj.id,
+                    "access_type": obj2,
+                    "access_level": obj.trg
+                };
+                data.push(data_i);
+            });
+        });
 
-        console.log(data);
+        //console.log(data);
 
-        var redurl = sess.redURL;
-        var toki = sess.token;
+        var redurl = req.session.redURL;
+        var toki = req.session.token;
 
         var headi = {
             "Authorization": toki
@@ -440,7 +472,7 @@ router.post('/accept', function (req, res, next) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error
             if (typeof datat.error == 'undefined') {
-                var nexttt = redurl + "?OUST=" +toki;
+                var nexttt = redurl + "?OUST=" + toki;
                 res.send(nexttt);
             } else {
                 res.send(datat.error);
@@ -461,10 +493,11 @@ router.post('/accept', function (req, res, next) {
 router.post('/cancel', function (req, res, next) {
 
     //first step: validate token
-
+    console.log(req.sessionID)
+    console.log("\n\n")
     var validated = false;
 
-    var tok = jwt.decode(sess.authtoken, seckeyenc);
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -472,11 +505,10 @@ router.post('/cancel', function (req, res, next) {
         }
     }
 
-
     //proceed only if validated
     if (validated) {
 
-        var linkg = sess.redURL + "?OUST=" +sess.token + "?ERROR=error_permissions";
+        var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
         res.send(linkg);
 
     }
