@@ -82,6 +82,8 @@ router.get('/account', function (req, res, next) {
     req.session.redURL = req.query.redirectURL;
     req.session.appPermJson = new Buffer( req.query.appPerms, 'base64').toString('utf8');
 
+    console.log(req.session.appPermJson)
+
     //create an extra token for authentication
     var payload = {
         ip: req.connection.remoteAddress
