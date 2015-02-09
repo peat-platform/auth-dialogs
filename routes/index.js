@@ -80,6 +80,7 @@ router.get('/account', function (req, res, next) {
     req.session.api_key = req.query.api_key;
     req.session.secret = req.query.secret;
     req.session.redURL = req.query.redirectURL;
+    req.session.appPermJson = new Buffer( req.query.appPerms, 'base64').toString('utf8');
 
     //create an extra token for authentication
     var payload = {
