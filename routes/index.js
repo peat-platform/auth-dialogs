@@ -62,11 +62,11 @@ function postScript(method, postdata, path, addheaders, success, error) {
     req.end();
 }
 
-router.post("/sendPerms", function (req, res) {
+/*router.post("/sendPerms", function (req, res) {
     req.session.appPermJson = "mple"
     res.status = 200;
     res.end()
-})
+})*/
 
 /*================*/
 /* GET home page. */
@@ -85,7 +85,6 @@ router.get('/account', function (req, res, next) {
     } catch (e){
         console.log(e)
     }
-
 
     //console.log(req.session.appPermJson)
 
@@ -157,7 +156,6 @@ router.get('/permissions', function (req, res, next) {
         "Location Post",
         "Photo Post",
         "Article Post"
-
     ];
 
     var typesId = [
@@ -250,7 +248,6 @@ router.get('/permissions', function (req, res, next) {
             "grnt": "grant"
         }
     ];
-
 
     //save manifest at session for accept
     //req.session.accpt_prm = testAppPermJson;
