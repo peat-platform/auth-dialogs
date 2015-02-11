@@ -83,7 +83,9 @@ router.get('/account', function (req, res, next) {
     try{
         req.session.appPermJson = JSON.parse(new Buffer( req.query.appPerms, 'base64').toString('utf8'));
     } catch (e){
-        console.log(e)
+        console.log(e);
+        req.session.appPermJson = null;
+        res.render('error.ejs', {message: "Permissions JSON invalid",error:e})
     }
     var payload = {
         ip: req.connection.remoteAddress
@@ -103,8 +105,31 @@ router.get('/account', function (req, res, next) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error
             if (typeof datat['@id'] != 'undefined') {
-                var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
-                res.redirect(rdl);
+
+
+                if (req.session.accept) {
+                    var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
+                    res.redirect(rdl);
+                } else {
+                    res.redirect('/auth/cancel')
+
+                }
+
+                // path = "/api/v1/permissions";
+                //
+                //postScript("GET", {}, path, headi, function (datat2) {
+                //    //success: send url so that client redirects
+                //    // redirect to redirectURI only if there is no error
+                //    if ( JSON.stringify(datat2) === JSON.stringify(req.session.appPermJson) ) {
+                //        var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
+                //        res.redirect(rdl);
+                //    } else {
+                //        res.redirect('/auth/cancel')
+                //    }
+                //}, function () {
+                //    res.status(500).send('OPENi Internal error: checking accepted permissions  failed');
+                //});
+
             } else {
                 res.render("openi_account")
             }
@@ -484,6 +509,9 @@ router.post('/accept', function (req, res, next) {
     //proceed only if validated
     if (validated) {
 
+        req.session.accept = true;
+
+
         var path = "/api/v1/permissions";
 
         //prepare the data to send to OPENi
@@ -540,6 +568,7 @@ router.post('/cancel', function (req, res, next) {
     console.log("\n\n");
     var validated = false;
 
+
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
@@ -550,6 +579,8 @@ router.post('/cancel', function (req, res, next) {
 
     //proceed only if validated
     if (validated) {
+        req.session.accept = false;
+
         var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
         res.send(linkg);
 
