@@ -108,6 +108,32 @@ function getURLparam(name) {
 //
 //});
 
+
+
+//function getPerms(){
+//
+//    $.ajax({
+//        type: "POST",
+//        url:"http://127.0.0.1:3000/auth/fill_permissions",
+//        contentType: "application/json",
+//        crossDomain: true,
+//        data: "",
+//        success: function (res){
+//
+//           //fill the space with the data
+//            document.getElementById("permCont").innerHTML = res;
+//
+//
+//        },
+//        error: function(error) {
+//            console.log("failed with "+ error.status);
+//        }
+//
+//    });
+//
+//}
+
+
 $(" #accept_permapp").click(function(){
     //window.location.replace(getCookie("redirectURI") + "?OUST=" + getCookie("jwt") );
 

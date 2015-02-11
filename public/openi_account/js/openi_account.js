@@ -87,8 +87,6 @@
 //
 function onClickRegisterButton() {
 
-
-
     var username = $(" #_openi_username").val();
     var password = $(" #_openi_passwd").val();
     var confirmPassword = $(" #_openi_conf_passwd").val();
@@ -223,8 +221,7 @@ function createUser(username, password) {
 
     var dt ={
         "username":username,
-        "password":password,
-        "url_par":"logcrt"
+        "password":password
     };
 
     dt = JSON.stringify(dt);
@@ -310,7 +307,8 @@ function loginUser(username, password) {
 
                 }, function (error) {
                     console.log(error)
-                })*//*
+                })
+                *//*
         }
     }, function (error) {
         custAlert("Something went wrong with login!!! \n :( ");
@@ -324,8 +322,7 @@ function loginUser(username, password) {
 
     var dt ={
         "username":username,
-        "password":password,
-        "url_par":"logcrt"
+        "password":password
     };
 
     dt = JSON.stringify(dt);
@@ -342,9 +339,7 @@ function loginUser(username, password) {
                 custAlert(res);
             } else {
                 window.open(res,"_self")
-
             }
-
 
         },
         error: function(error) {
