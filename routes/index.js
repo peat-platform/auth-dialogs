@@ -307,7 +307,7 @@ router.get('/permissions', function (req, res, next) {
 
     };
 
-    res.locals.session = req.session;
+    //res.locals.session = req.session;
     //send permissions page with permissions
     res.render('app_perm.ejs', {app_perms: app_perms})
 
