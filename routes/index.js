@@ -62,12 +62,6 @@ function postScript(method, postdata, path, addheaders, success, error) {
     req.end();
 }
 
-/*router.post("/sendPerms", function (req, res) {
- req.session.appPermJson = "mple"
- res.status = 200;
- res.end()
- })*/
-
 /*================*/
 /* GET home page. */
 /*================*/
@@ -365,13 +359,6 @@ router.post('/login', function (req, res, next) {
         //get session token from OPENi
         var path = "/api/v1/auth/authorizations";
 
-        //var data = {
-        //    "username": req.body.username,
-        //    "password": req.body.password,
-        //    "api_key": req.session.api_key,
-        //    "secret": req.session.secret
-        //};
-
         var data = {
             "username": req.body.username,
             "password": req.body.password,
@@ -379,10 +366,7 @@ router.post('/login', function (req, res, next) {
             "secret": req.session.secret
         };
 
-        //var redurl = req.session.redURL;
-
         var redurl = req.session.redURL;
-
 
         //console.log(data);
 
@@ -417,9 +401,7 @@ router.post('/create', function (req, res, next) {
     //sess = req.session;
 
     var validated = false;
-    //var tok = jwt.decode(req.session.authtoken, seckeyenc);
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
-
 
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
@@ -456,12 +438,8 @@ router.post('/create', function (req, res, next) {
                     // redirect to redirectURI only if no error is found
 
                     if (typeof data3.error == 'undefined') {
-
-                        var redlink = "http://127.0.0.1:3000/auth/permissions";
-
                         req.session.token = data3.session;
 
-                        var nexttt = redlink;
                         res.send('OK');
                     } else {
                         //OPENi returned error
@@ -512,21 +490,6 @@ router.post('/accept', function (req, res, next) {
 
         //prepare the data to send to OPENi
         var data = req.session.appPermJson;
-
-        //req.session.appPermJson.forEach(function (obj) {
-        //
-        //    obj.prm.forEach(function (obj2) {
-        //
-        //        var data_i =
-        //        {
-        //            "type": obj.type,
-        //            "ref": obj.id,
-        //            "access_type": obj2,
-        //            "access_level": obj.trg
-        //        };
-        //        data.push(data_i);
-        //    });
-        //});
 
         var redurl = req.session.redURL;
         var toki = req.session.token;
@@ -605,10 +568,6 @@ router.get('/logout', function (req, res, next) {
     }
 });
 
-
-module.exports = router;
-
-
 function getTypes(offset, callback) {
 
     var types = {};
@@ -636,16 +595,18 @@ function getTypes(offset, callback) {
 
         })
 
-
     }
-
 
     recsrv(0, function () {
         callback(types);
 
     });
 
-
 }
+
+module.exports = router;
+
+
+
 
 
