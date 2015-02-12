@@ -111,7 +111,8 @@ router.get('/account', function (req, res, next) {
                     var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
                     res.redirect(rdl);
                 } else {
-                    res.redirect('/auth/cancel')
+                    var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
+                    res.redirect(linkg);
 
                 }
 
@@ -584,6 +585,29 @@ router.post('/cancel', function (req, res, next) {
         var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
         res.send(linkg);
 
+    }
+});
+
+router.get('/logout', function (req, res, next) {
+
+    //first step: validate token
+    console.log(req.sessionID);
+    console.log("\n\n");
+    var validated = false;
+
+
+    var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
+    if (tok.hasOwnProperty("ip")) {
+        if (tok.ip == req.connection.remoteAddress) {
+            validated = true;
+        }
+    }
+
+    //proceed only if validated
+    if (validated) {
+        req.session.destroy();
+        res.send("OK")
     }
 });
 
