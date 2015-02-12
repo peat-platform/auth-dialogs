@@ -26,7 +26,7 @@ function postScript(method, postdata, path, addheaders, success, error) {
     }
 
     options = {
-        host: '10.130.34.17', //127.0.0.1
+        host: '127.0.0.1', // 10.130.34.17
         port: 443,
         path: path,
         method: method,
