@@ -218,7 +218,6 @@ function createUser(username, password) {
     //    console.log("json is invalid");
     //}
 
-
     var dt ={
         "username":username,
         "password":password
@@ -238,7 +237,7 @@ function createUser(username, password) {
                 custAlert(res);
             } else{
                window.location.href = "./permissions"
-            };
+            }
 
         },
         error: function(error) {
