@@ -62,12 +62,6 @@ function postScript(method, postdata, path, addheaders, success, error) {
     req.end();
 }
 
-/*router.post("/sendPerms", function (req, res) {
-    req.session.appPermJson = "mple"
-    res.status = 200;
-    res.end()
-})*/
-
 /*================*/
 /* GET home page. */
 /*================*/
@@ -106,7 +100,6 @@ router.get('/account', function (req, res, next) {
             // redirect to redirectURI only if there is no error
             if (typeof datat['@id'] != 'undefined') {
 
-
                 if (req.session.accept) {
                     var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
                     res.redirect(rdl);
@@ -137,8 +130,7 @@ router.get('/account', function (req, res, next) {
         }, function () {
             res.status(500).send('OPENi Internal error: getting cloudlet id failed');
         });
-    } else
-    {
+    } else {
         res.render("openi_account")
     }
 });
@@ -416,7 +408,6 @@ router.post('/create', function (req, res, next) {
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     //console.log(tok);
-
     if (tok.hasOwnProperty("ip")) {
         if (tok.ip == req.connection.remoteAddress) {
             validated = true;
@@ -424,7 +415,6 @@ router.post('/create', function (req, res, next) {
     }
 
     if (validated) {
-
         //create user, then login to get session token
         var path1 = "/api/v1/auth/users";
         var path2 = "/api/v1/auth/authorizations";
@@ -440,13 +430,6 @@ router.post('/create', function (req, res, next) {
                 res.send(dat.error);
             } else {
 
-                //var data2 = {
-                //    "username": req.body.username,
-                //    "password": req.body.password,
-                //    "api_key": req.session.api_key,
-                //    "secret": req.session.secret
-                //};
-
                 var data2 = {
                     "username": req.body.username,
                     "password": req.body.password,
@@ -459,14 +442,7 @@ router.post('/create', function (req, res, next) {
                     // redirect to redirectURI only if no error is found
 
                     if (typeof data3.error == 'undefined') {
-
-                        var redlink = "http://127.0.0.1:3000/auth/permissions";
-
-                        //req.session.token = data3.session;
                         req.session.token = data3.session;
-
-                        var nexttt = redlink;
-                        //res.redirect('/auth/permissions');
                         res.send('OK');
                     } else {
                         //OPENi returned error
@@ -511,7 +487,6 @@ router.post('/accept', function (req, res, next) {
     if (validated) {
 
         req.session.accept = true;
-
 
         var path = "/api/v1/permissions";
 
@@ -569,7 +544,6 @@ router.post('/cancel', function (req, res, next) {
     console.log("\n\n");
     var validated = false;
 
-
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
@@ -595,7 +569,6 @@ router.get('/logout', function (req, res, next) {
     console.log("\n\n");
     var validated = false;
 
-
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
@@ -608,6 +581,8 @@ router.get('/logout', function (req, res, next) {
     if (validated) {
         req.session.destroy();
         res.send("OK")
+    } else {
+        res.status(404).send("Not authorized")
     }
 });
 
