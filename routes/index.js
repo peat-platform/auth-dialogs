@@ -105,7 +105,7 @@ router.get('/account', function (req, res, next) {
                     res.redirect(rdl);
                 } else {
                     var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
-                    res.redirect(linkg);
+                    res.redirect('/auth/permissions');
 
                 }
 
