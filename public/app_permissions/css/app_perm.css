@@ -23,6 +23,21 @@ body {
 	padding:2%;
 }
 
+
+/*********************** container ***********************/
+#permconti {
+	margin-top: 40px;
+}
+
+@media screen and (max-width: 768px) {
+	#permconti {
+		margin-top: 0px;
+	}
+}
+
+
+
+
 /*********************** buttons ***********************/
 
 .action_ca {
