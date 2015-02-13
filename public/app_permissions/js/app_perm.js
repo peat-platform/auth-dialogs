@@ -109,7 +109,6 @@ function getURLparam(name) {
 //});
 
 
-
 //function getPerms(){
 //
 //    $.ajax({
@@ -134,34 +133,31 @@ function getURLparam(name) {
 //}
 
 
-$(" #accept_permapp").click(function(){
+$(" #accept_permapp").click(function () {
     //window.location.replace(getCookie("redirectURI") + "?OUST=" + getCookie("jwt") );
 
     //for now we accept everything.
     var dt = {
-        "all":'yes'
+        "all": 'yes'
     };
-
     dt = JSON.stringify(dt);
 
     $.ajax({
         type: "POST",
-        url:"http://"+window.location.host+"/auth/accept",
+        url: "http://" + window.location.host + "/auth/accept",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
-        success: function (res){
+        success: function (res) {
 
-            if ( res.indexOf("OUST")== -1 ) {
+            if (res.indexOf("OUST") == -1) {
                 custAlert(res);
             } else {
-                window.open(res,"_self")
-
+                window.open(res, "_self")
             }
-
         },
-        error: function(error) {
-            console.log("failed with "+ error.status);
+        error: function (error) {
+            console.log("failed with " + error.status);
         }
 
     });
@@ -169,35 +165,31 @@ $(" #accept_permapp").click(function(){
 });
 
 
-$(" #cancel_permapp").click(function(){
+$(" #cancel_permapp").click(function () {
 
     $.ajax({
         type: "POST",
-        url:"http://"+window.location.host+"/auth/cancel",
+        url: "http://" + window.location.host + "/auth/cancel",
         contentType: "application/json",
         crossDomain: true,
         data: "",
-        success: function (res){
+        success: function (res) {
 
-            if ( res.indexOf("ERROR")!= -1 ) {
+            if (res.indexOf("ERROR") != -1) {
                 //custAlert("Warning: Permissions denied");
-                window.open(res,"_self")
+                window.open(res, "_self")
             } else {
-
-                window.open(res,"_self")
-
+                window.open(res, "_self")
             }
-
         },
-        error: function(error) {
-            console.log("failed with "+ error.status);
+        error: function (error) {
+            console.log("failed with " + error.status);
         }
-
     });
 
 });
 
-function custAlert(text){
+function custAlert(text) {
     $(".custAlert").text("").text(text);
     $("#alertBtn").click()
 }
@@ -208,17 +200,17 @@ function custAlert(text){
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
+        while (c.charAt(0) == ' ') c = c.substring(1);
         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return "";
