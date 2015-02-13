@@ -310,11 +310,12 @@ router.get('/permissions', function (req, res, next) {
         });
 
 
+
         for (var key in showjson) {
 
             app_perms += ('<div class="contA">' +
             '<div style="font-weight: bold">' + key + '</div>' +
-            '<div>Permission Types: ' + showjson[key] + '</div>' +
+            '<div>Permission Types: ' + showjson[key].toString().replace(/,/g,', ') + '</div>' +
             '</div>');
 
         }
