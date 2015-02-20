@@ -5,4 +5,4 @@
 - node bin/www
 
 ##Run:
-- GET: http://localhost:3000/auth/account?api_key=XXX&secret=XXX&redirectURL=XXX
+- GET: http://localhost:3000/auth/account?api_key=XXX&secret=XXX&redirectURL=XXX&appPermJson={base64-permissions}
