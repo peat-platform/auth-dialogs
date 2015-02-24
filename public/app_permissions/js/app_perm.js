@@ -1,3 +1,4 @@
+
 /**
  * Created by nstasinos on 5/10/2014.
  */
@@ -144,7 +145,7 @@ $(" #accept_permapp").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "http://" + window.location.host + "/auth/accept",
+        url: "https://" + window.location.host + "/auth/accept",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
@@ -169,7 +170,7 @@ $(" #cancel_permapp").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "http://" + window.location.host + "/auth/cancel",
+        url: "https://" + window.location.host + "/auth/cancel",
         contentType: "application/json",
         crossDomain: true,
         data: "",

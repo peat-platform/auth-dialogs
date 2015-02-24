@@ -238,7 +238,7 @@ function createUser(username, password) {
 
     $.ajax({
         type: "POST",
-        url: "http://" + window.location.host + "/auth/create",
+        url: "https://" + window.location.host + "/auth/create",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
@@ -346,7 +346,7 @@ function loginUser(username, password) {
 
     $.ajax({
         type: "POST",
-        url: "http://" + window.location.host + "/auth/login",
+        url: "https://" + window.location.host + "/auth/login",
         contentType: "application/json",
         crossDomain: true,
         data: dt,

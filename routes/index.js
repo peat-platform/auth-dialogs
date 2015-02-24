@@ -1,8 +1,9 @@
 var express = require('express');
-var router = express.Router();
-var path = require('path');
-var https = require('https');
-var jwt = require('jwt-simple');
+//var router  = express.Router();
+var router  = express();
+var path    = require('path');
+var https   = require('https');
+var jwt     = require('jwt-simple');
 
 var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
 
@@ -76,18 +77,22 @@ router.get('/account', function (req, res, next) {
     req.session.secret = req.query.secret;
     req.session.redURL = req.query.redirectURL;
     try {
-        req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
+        //req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
     } catch (e) {
         console.log(e);
         req.session.appPermJson = null;
         res.render('error.ejs', {message: "Permissions JSON invalid", error: e})
     }
     var payload = {
-        ip: req.connection.remoteAddress
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
     };
     // encode token with the predefined secret key
     var token = jwt.encode(payload, seckeyenc);
     req.session.authtoken = token;
+
+   console.log("req.connection.", payload)
+   //console.log("payload", payload)
+   //console.log("req.session.authtoken", req.session.authtoken)
 
     if (typeof req.session.token != 'undefined') {
 
@@ -291,23 +296,27 @@ router.get('/permissions', function (req, res, next) {
 
     getTypes(0, function (names) {
 
-        console.log('Got');
-        console.log(names);
+       console.log('Got');
+       console.log(names);
 
-        testAppPermJson.forEach(function (obj) {
+       if ( undefined !== testAppPermJson && null !== testAppPermJson ) {
 
-            console.log(obj.id);
+       testAppPermJson.forEach(function (obj) {
 
-            var idaki = names[obj.ref];
-            console.log(idaki);
+          console.log(obj.id);
 
-            if (typeof showjson[idaki] == 'undefined') {
-                showjson[idaki] = [];
-                showjson[idaki].push(obj.access_type);
-            } else {
-                showjson[idaki].push(obj.access_type);
-            }
-        });
+          var idaki = names[obj.ref];
+          console.log(idaki);
+
+          if (typeof showjson[idaki] == 'undefined') {
+             showjson[idaki] = [];
+             showjson[idaki].push(obj.access_type);
+          }
+          else {
+             showjson[idaki].push(obj.access_type);
+          }
+       });
+    }
 
 
 
@@ -352,10 +361,11 @@ router.post('/login', function (req, res, next) {
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
-        if (tok.ip == req.connection.remoteAddress) {
+        if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
             validated = true;
         }
     }
+
     //proceed only if validated
     if (validated) {
         //get session token from OPENi
@@ -364,17 +374,21 @@ router.post('/login', function (req, res, next) {
         var data = {
             "username": req.body.username,
             "password": req.body.password,
-            "api_key": req.session.api_key,
-            "secret": req.session.secret
+            "api_key" : req.session.api_key,
+            "secret"  : req.session.secret
         };
 
         var redurl = req.session.redURL;
 
-        //console.log(data);
+        //console.log("data:   ", data);
+        //console.log("redurl: ",  redurl);
+        //console.log("path: ",    path);
 
         postScript("POST", data, path, null, function (datat) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error
+           console.log("\ndatat:", datat)
+
             if (typeof datat.error == 'undefined') {
                 var nexttt = redurl + "?OUST=" + datat.session;
                 req.session.token = datat.session;

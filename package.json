@@ -16,6 +16,7 @@
     "morgan": "~1.5.1",
     "serve-favicon": "~2.2.0",
     "connect-redis": "",
-    "redis": ""
+    "redis": "",
+    "m2node": "OPENi-ict/m2node"
   }
 }

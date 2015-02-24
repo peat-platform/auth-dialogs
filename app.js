@@ -5,7 +5,7 @@ var logger = require('morgan');
 var exp_session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var redis = require("redis").createClient("6379", "10.130.34.17");
+var redis = require("redis").createClient("6379", "127.0.0.1");
 var RedisStore = require("connect-redis")(exp_session);
 
 var app = express();
@@ -48,7 +48,7 @@ app.use(exp_session({
     secret: 'Op3n1@#',
     resave: false,
     saveUninitialized: true,
-    store: new RedisStore({ host: '10.130.34.17', port: 6379 })
+    store: new RedisStore({ host: '127.0.0.1', port: 6379 })
 }));
 
 app.use('/auth', routes);
