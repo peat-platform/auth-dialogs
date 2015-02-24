@@ -17,6 +17,7 @@
     "serve-favicon": "~2.2.0",
     "connect-redis": "",
     "redis": "",
+    "jsonwebtoken":"",
     "m2node": "OPENi-ict/m2node"
   }
 }
