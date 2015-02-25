@@ -34,7 +34,7 @@ module.exports = function (req, res, next) {
       ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
    };
    // encode token with the predefined secret key
-   var token = jwt.encode(payload, seckeyenc);
+   var token             = jwt.encode(payload, seckeyenc);
    req.session.authtoken = token;
 
 
