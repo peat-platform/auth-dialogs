@@ -12,6 +12,8 @@ var createAction      = require('./create')
 var acceptAction      = require('./accept')
 var cancelAction      = require('./cancel')
 var logoutAction      = require('./logout')
+var permdeniedAction  = require('./permsDenied')
+
 
 
 router.get('/account',     accountAction)
@@ -21,6 +23,7 @@ router.post('/create',     createAction);
 router.post('/accept',     acceptAction);
 router.post('/cancel',     cancelAction);
 router.get('/logout',      logoutAction);
+router.get('/permsDenied', permdeniedAction);
 
 
 module.exports = router;

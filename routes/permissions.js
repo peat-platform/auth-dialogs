@@ -55,29 +55,51 @@ module.exports = function (req, res, next) {
    //else return to redirect.
 
 
-   var newPerms = req.session.appPerms
+   var testAppPermJson = req.session.appPermJson;
 
-   console.log("newPerms", newPerms)
 
    //prepare html string based on manifest
 
    var app_perms = '';
-   var showjson, names = {};
+
+   var showjson = {};
 
 
-   //for (var key in newPerms) {
-   //
-   //   app_perms += ('<div class="contA">' +
-   //   '<div style="font-weight: bold">' + key + '</div>' +
-   //   '<div>Permission Types: ' + showjson[key].toString().replace(/,/g,', ') + '</div>' +
-   //   '</div>');
-   //
-   //}
+   getTypes(0, function (names) {
 
-   //res.locals.session = req.session;
-   //send permissions page with permissions
-   res.render('app_perm.ejs', {app_perms: newPerms})
+      //console.log('Got');
+      //console.log(names);
+
+      testAppPermJson.forEach(function (obj) {
+
+         console.log(obj.id);
+
+         var idaki = names[obj.ref];
+
+         if (typeof showjson[idaki] == 'undefined') {
+            showjson[idaki] = [];
+            showjson[idaki].push(obj.access_type);
+         } else {
+            showjson[idaki].push(obj.access_type);
+         }
+      });
 
 
 
-}
+      for (var key in showjson) {
+
+         app_perms += ('<div class="contA">' +
+         '<div style="font-weight: bold">' + key + '</div>' +
+         '<div>Permission Types: ' + showjson[key].toString().replace(/,/g,', ') + '</div>' +
+         '</div>');
+
+      }
+
+
+      //res.locals.session = req.session;
+      //send permissions page with permissions
+      res.render('app_perm.ejs', {app_perms: app_perms})
+
+   });
+
+};
