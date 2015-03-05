@@ -30,8 +30,7 @@ module.exports = function (req, res, next) {
 
       //prepare the data to send to OPENi
 
-      var data = JSON.parse(req.session.appPerms)
-
+      var data   = req.session.appPerms
       var redurl = req.session.redURL;
       var toki   = req.session.token;
 

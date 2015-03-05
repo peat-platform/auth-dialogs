@@ -2,46 +2,6 @@
 var postScript = require('./postScript')
 
 
-
-function getTypes(offset, callback) {
-
-   var types = {};
-
-   function recsrv(offset, callback2) {
-
-      var path = "/api/v1/types?offset=" + offset;
-
-      postScript("GET", {}, path, null, function (dat) {
-
-         console.log("yea");
-         dat.result.forEach(function (obj) {
-
-            var name = obj['@reference'];
-            var id = obj['@id'];
-            name = name.replace('_post', '');
-            types[id] = name;
-         });
-         var more = dat.meta.total_count >= 30;
-         if (more) {
-            recsrv(offset + 30,callback2);
-         } else {
-            callback2();
-         }
-
-      })
-
-   }
-
-   recsrv(0, function () {
-      callback(types);
-
-   });
-
-}
-
-
-
-
 /*======================*/
 /* get permissions page */
 /*======================*/
@@ -54,29 +14,25 @@ module.exports = function (req, res, next) {
    //if new permissions or permission don't exist open perms dialog view
    //else return to redirect.
 
+   var headi = {
+      "Authorization": req.session.token
+   };
+   var path = "/api/v1/app_permissions/" + req.session.api_key;
+   postScript("GET", {}, path, headi, function (datat) {
 
-   var newPerms = req.session.appPerms
+      console.log(datat)
 
-   console.log("newPerms", newPerms)
+      var newPerms = datat.result[0]
 
-   //prepare html string based on manifest
+      console.log("newPerms", newPerms)
 
-   var app_perms = '';
-   var showjson, names = {};
+      req.session.appPerms = newPerms.permissions
+
+      res.render('app_perm.ejs', {app_perms: newPerms, app_perms_string: JSON.stringify(newPerms)})
+
+   });
 
 
-   //for (var key in newPerms) {
-   //
-   //   app_perms += ('<div class="contA">' +
-   //   '<div style="font-weight: bold">' + key + '</div>' +
-   //   '<div>Permission Types: ' + showjson[key].toString().replace(/,/g,', ') + '</div>' +
-   //   '</div>');
-   //
-   //}
-
-   //res.locals.session = req.session;
-   //send permissions page with permissions
-   res.render('app_perm.ejs', {app_perms: newPerms})
 
 
 
