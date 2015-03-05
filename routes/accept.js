@@ -19,12 +19,15 @@ module.exports = function (req, res, next) {
       }
    }
 
-   console.log("validated", validated)
+    
+
+   console.log("validated", validated);
 
    //proceed only if validated
    if (validated) {
 
-      req.session.accept = true;
+
+      //req.session.accept = true;
 
       var path = "/api/v1/permissions";
 

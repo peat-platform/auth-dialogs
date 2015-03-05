@@ -20,20 +20,11 @@ module.exports = function (req, res, next) {
    var path = "/api/v1/app_permissions/" + req.session.api_key;
    postScript("GET", {}, path, headi, function (datat) {
 
-      console.log(datat)
-
       var newPerms = datat.result[0]
-
-      console.log("newPerms", newPerms)
-
       req.session.appPerms = newPerms.permissions
 
       res.render('app_perm.ejs', {app_perms: newPerms, app_perms_string: JSON.stringify(newPerms)})
 
    });
 
-
-
-
-
-}
+};
