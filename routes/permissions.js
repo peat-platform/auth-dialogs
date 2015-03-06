@@ -1,5 +1,48 @@
+var postScript = require('./postScript');
 
-var postScript = require('./postScript')
+
+function getTypes(offset, callback) {
+
+    var types = {};
+
+    function recsrv(offset, callback2) {
+
+        var path = "/api/v1/types?offset=" + offset;
+        postScript("GET", {}, path, null, function (dat) {
+
+            console.log("yea");
+            dat.result.forEach(function (obj) {
+
+                var name = obj['@reference'];
+                var id = obj['@id'];
+                name = name.replace('_post', '');
+                types[id] = name;
+            });
+            var more = dat.meta.total_count >= 30;
+            if (more) {
+                recsrv(offset + 30, callback2);
+            } else {
+                callback2();
+            }
+        })
+    }
+    recsrv(0, function () {
+        callback(types);
+    });
+}
+
+function getTypes2(dat, callback) {
+
+    var types = {};
+    console.log("yea");
+    dat.forEach(function (obj) {
+        var name = obj['@reference'];
+        var id = obj['@id'];
+        name = name.replace('_post', '');
+        types[id] = name;
+    });
+    callback(types);
+}
 
 
 /*======================*/
@@ -7,24 +50,69 @@ var postScript = require('./postScript')
 /*======================*/
 module.exports = function (req, res, next) {
 
+    //ID - name match for proper view
+    console.log(req.sessionID);
+    console.log("\n\n");
+    var headi = {
+        "Authorization": req.session.token
+    };
+    var path = "/api/v1/app_permissions/" + req.session.api_key;
+    postScript("GET", {}, path, headi, function (datat3) {
 
-   //before redirect we need to check permissions have been set for this user on this app.
-   //check permissions endpoint user_key + app_key
-   //also check other (client???) bucket and compare permissions version
-   //if new permissions or permission don't exist open perms dialog view
-   //else return to redirect.
+        //save them to session here
+        req.session.appPerms = datat3.result[0];
+        if (req.session.appPerms.hasOwnProperty("permissions") ) {
 
-   var headi = {
-      "Authorization": req.session.token
-   };
-   var path = "/api/v1/app_permissions/" + req.session.api_key;
-   postScript("GET", {}, path, headi, function (datat) {
+            var testAppPermJson = req.session.appPerms.permissions;
+            //prepare html string based on manifest
+            var app_perms = '';
+            var showjson = {};
+            //USE getTypes for BASE 64
+            
+            if (req.session.appPerms.hasOwnProperty("types")) {
 
-      var newPerms = datat.result[0]
-      req.session.appPerms = newPerms.permissions
+                getTypes2(req.session.appPerms.types, function (names) {
 
-      res.render('app_perm.ejs', {app_perms: newPerms, app_perms_string: JSON.stringify(newPerms)})
+                    console.log('Got');
+                    console.log(names);
+                    console.log(testAppPermJson);
 
-   });
+                    testAppPermJson.forEach(function (obj) {
 
+                        console.log(obj.id);
+                        var idaki = names[obj.ref];
+                        console.log(idaki);
+
+                        if (typeof showjson[idaki] == 'undefined') {
+                            showjson[idaki] = [];
+                            showjson[idaki].push(obj.access_type);
+                        } else {
+                            showjson[idaki].push(obj.access_type);
+                        }
+                    });
+
+                    for (var key in showjson) {
+
+                        app_perms += ('<div class="contA">' +
+                        '<div style="font-weight: bold">' + key + '</div>' +
+                        '<div>Permission Types: ' + showjson[key].toString().replace(/,/g, ', ') + '</div>' +
+                        '</div>');
+                    }
+                    res.render('app_perm.ejs', {app_perms: app_perms});
+                    //res.send()
+                });
+            } else {
+                res.status(500).send('OPENi Internal error: App Types not found');
+
+            }
+            
+
+        } else {
+            res.status(500).send('OPENi Internal error: App Permissions not found');
+
+        }
+
+    }, function () {
+        res.status(500).send('OPENi Internal error: getting app permissions  failed');
+    });
 };

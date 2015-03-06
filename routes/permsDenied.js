@@ -2,7 +2,8 @@
  * Created by sspatharioti on 2/25/2015.
  */
 
-var jwt = require('jwt-simple');
+
+var jwt        = require('jwt-simple');
 
 var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
 
@@ -16,7 +17,7 @@ module.exports = function (req, res, next) {
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
 
     if (tok.hasOwnProperty("ip")) {
-        if (tok.ip == req.connection.remoteAddress) {
+        if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
             validated = true;
         }
     }
@@ -25,7 +26,7 @@ module.exports = function (req, res, next) {
     if (validated) {
         //req.session.accept = false;
 
-        var linkg = req.session.redURL + "?OUST=" + req.session.token + "?ERROR=error_permissions";
+        var linkg = req.session.redURL + "?OUST=" + req.session.token + "&ERROR=error_permissions";
         res.redirect(linkg);
     }
 };
