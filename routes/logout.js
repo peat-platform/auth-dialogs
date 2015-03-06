@@ -3,7 +3,7 @@ var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
 
 module.exports = function (req, res, next) {
 
-    //first step: validate token
+//first step: validate token
     console.log(req.sessionID);
     console.log("\n\n");
     var validated = false;
@@ -20,7 +20,10 @@ module.exports = function (req, res, next) {
     }
     //proceed only if validated
     if (validated) {
+
+        var link = req.session.redURL;
         req.session.destroy();
-        res.send("You've been successfully logged out of OPENi")
+        res.render('logout.ejs', {link:link});
+
     }
 };
