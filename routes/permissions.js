@@ -17,7 +17,9 @@ module.exports = function (req, res, next) {
    var headi = {
       "Authorization": req.session.token
    };
+
    var path = "/api/v1/app_permissions/" + req.session.api_key;
+
    postScript("GET", {}, path, headi, function (datat) {
 
       var newPerms = datat.result[0]
