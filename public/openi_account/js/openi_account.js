@@ -117,7 +117,7 @@ function onClickRegisterButton() {
                         validated = false;
                     } else {
                         if (!$("#accept-openi").is(':checked')) {
-                            custAlert("You must accept OPENi permissions");
+                            custAlert("You must accept OPENi terms and conditions");
                             validated = false
                         }
                     }
@@ -145,11 +145,11 @@ function onClickLogInButton() {
     //var confirmPassword = confirmPasswordField.getValue();
     var validated = true;
     if (username === "") {
-        custAlert("Please provide correct credentials");
+        custAlert("Please provide a username");
         validated = false;
     } else {
         if (password === "") {
-            custAlert("Please provide correct credentials");
+            custAlert("Please provide a password");
             validated = false;
 
         }
@@ -352,17 +352,18 @@ function loginUser(username, password) {
         data: dt,
         success: function (res) {
 
-            if (res.indexOf("OUST") == -1) {
+            if (res.indexOf("/auth/permissions")!=-1) {
+                window.open("https://" + window.location.host + res, "_self")
+            }
+            else if (res.indexOf("OUST") == -1) {
                 custAlert(res);
             } else {
                 window.open(res, "_self")
             }
-
         },
         error: function (error) {
             console.log("failed with " + error.status);
         }
-
     });
 
 }
