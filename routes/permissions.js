@@ -29,9 +29,13 @@ module.exports = function (req, res, next) {
     var path = "/api/v1/app_permissions/" + req.session.api_key;
     postScript("GET", {}, path, headi, function (datat3) {
 
-        //save them to session here
-        req.session.appPerms = datat3.result[0];
-        if (req.session.appPerms.hasOwnProperty("permissions") ) {
+        var app_perms = datat3.result[0]
+        req.session.appPerms = app_perms;
+
+        if (undefined == app_perms){
+           res.status(500).send('OPENi Internal error: permission not set for this app.');
+        }
+        else if (req.session.appPerms.hasOwnProperty("permissions") ) {
 
             var testAppPermJson = req.session.appPerms.permissions;
             //prepare html string based on manifest

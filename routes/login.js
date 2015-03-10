@@ -37,7 +37,6 @@ var checkPerms = function(req, res, next) {
             res.send(nexttt);
          }
          else {
-            //res.send('https://' + req.headers.host + '/auth/permissions?OUST=OUST'); // TODO: redirect to permissions page in order to accept/deny again???
             res.send('/auth/permissions');
          }
       }, function () {
