@@ -77,7 +77,7 @@ module.exports = function (req, res, next) {
                     path = "/api/v1/app_permissions/" + req.session.api_key;
                     postScript("GET", {}, path, headi, function (datat3) {
 
-                        var app_perms = datat3.result[0]
+                       var app_perms = datat3.result[datat3.result.length -1]
                         req.session.appPerms = app_perms;
 
                         if (undefined == app_perms){

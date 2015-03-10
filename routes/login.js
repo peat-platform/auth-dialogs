@@ -26,7 +26,8 @@ var checkPerms = function(req, res, next) {
 
       postScript("GET", {}, path, headers, function (datat3) {
 
-         var app_perms = datat3.result[0]
+         var app_perms = datat3.result[datat3.result.length -1]
+
          req.session.appPerms = app_perms;
 
          if (undefined == app_perms){
