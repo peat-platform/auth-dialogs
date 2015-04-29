@@ -2,11 +2,7 @@ var jwt        = require('jwt-simple');
 var postScript = require('./postScript');
 var deepEqual  = require('deep-equal');
 
-var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
-
-
 var extractPermissions = function (req) {
-
     var b64 = req.query.appPerms;
     if (undefined === b64) {
         return {}
@@ -19,83 +15,84 @@ var extractPermissions = function (req) {
 /*================*/
 /* GET home page. */
 /*================*/
-module.exports = function (req, res, next) {
-   // save the api key, secret key and redirect URL to session
+module.exports = function(cmd_args) {
 
-   //console.log("account.js", "req.sessionID", req.sessionID);
+   return function (req, res, next) {
 
-   req.session.api_key = req.query.api_key;
-   req.session.secret  = req.query.secret;
-   req.session.redURL  = req.query.redirectURL;
+      var seckeyenc = cmd_args.seckeyenc
 
-   //COMMENT OUT TO REVERT TO BASE 64 SOLUTION
-   //req.session.appPerms = extractPermissions(req);
+      req.session.api_key = req.query.api_key;
+      req.session.secret = req.query.secret;
+      req.session.redURL = req.query.redirectURL;
 
-   var payload = {
-      //ip: req.connection.remoteAddress
-      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-   };
+      //COMMENT OUT TO REVERT TO BASE 64 SOLUTION
+      //req.session.appPerms = extractPermissions(req);
 
-   // encode token with the predefined secret key
-   var token = jwt.encode(payload, seckeyenc);
+      var payload = {
+         //ip: req.connection.remoteAddress
+         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      };
 
-   req.session.authtoken = token;
+      // encode token with the predefined secret key
+      req.session.authtoken = jwt.encode(payload, seckeyenc);
 
-   if (req.session.token === undefined) {
-      //console.log("account.js", "10" );
-      res.render("openi_account")
-   }
-   else{
-      //console.log("account.js", "req.session.token", req.session.token );
+      if (req.session.token === undefined) {
+         //console.log("account.js", "10" );
+         res.render("openi_account")
+      }
+      else {
+         //console.log("account.js", "req.session.token", req.session.token );
 
-      var headi = { "Authorization": req.session.token   };
+         var headi = {"Authorization": req.session.token};
 
-      postScript("GET", {}, "/api/v1/permissions", headi, function (user_app_perms) {
-         //success: send url so that client redirects
-         // redirect to redirectURI only if there is no error
+         postScript("GET", {}, "/api/v1/permissions", headi, function (user_app_perms) {
+            //success: send url so that client redirects
+            // redirect to redirectURI only if there is no error
 
-         //console.log("account.js", "user_app_perms", user_app_perms );
+            //console.log("account.js", "user_app_perms", user_app_perms );
 
-         var path = "/api/v1/app_permissions/" + req.session.api_key;
+            var path = "/api/v1/app_permissions/" + req.session.api_key;
 
-         postScript("GET", {}, path, headi, function (app_perms) {
+            postScript("GET", {}, path, headi, function (app_perms) {
 
-            //console.log("account.js", "app_perms", app_perms );
+               //console.log("account.js", "app_perms", app_perms );
 
-            var app_perms = app_perms.result[app_perms.result.length -1]
+               var app_perms = app_perms.result[app_perms.result.length - 1]
 
-            //console.log("account.js", "app_perms", app_perms );
+               //console.log("account.js", "app_perms", app_perms );
 
-            if (undefined == app_perms){
-               //console.log("account.js", "1" );
-               res.status(500).send('OPENi Internal error: permission not set for this app.');
-            }
-            else if (app_perms.hasOwnProperty("permissions")) {
-               //console.log("account.js", "2" );
-               //req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
-               if (deepEqual(user_app_perms, app_perms["permissions"])){
-                  //console.log("account.js", "3" );
-                  res.redirect(req.query.redirectURL + '?OUST=' + req.session.token);
+               if (undefined == app_perms) {
+                  //console.log("account.js", "1" );
+                  res.status(500).send('OPENi Internal error: permission not set for this app.');
+               }
+               else if (app_perms.hasOwnProperty("permissions")) {
+                  //console.log("account.js", "2" );
+                  //req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
+                  if (deepEqual(user_app_perms, app_perms["permissions"])) {
+                     //console.log("account.js", "3" );
+                     res.redirect(req.query.redirectURL + '?OUST=' + req.session.token);
+                  }
+                  else {
+                     res.render("openi_account");
+                     ////console.log("account.js", "4" );
+                     //res.redirect('/auth/permsDenied')
+                  }
+
                }
                else {
-                  res.render("openi_account");
-                  ////console.log("account.js", "4" );
-                  //res.redirect('/auth/permsDenied')
+                  //console.log("account.js", "5" );
+                  res.status(500).send('OPENi Internal error: getting app permissions  failed');
                }
 
-            } else {
-               //console.log("account.js", "5" );
+            }, function () {
+               //console.log("account.js", "6" );
                res.status(500).send('OPENi Internal error: getting app permissions  failed');
-            }
+            });
 
          }, function () {
-            //console.log("account.js", "6" );
-            res.status(500).send('OPENi Internal error: getting app permissions  failed');
+            //console.log("account.js", "7" );
+            res.status(500).send('OPENi Internal error: checking accepted permissions  failed');
          });
-
-      }, function () {
-         //console.log("account.js", "7" );
-         res.status(500).send('OPENi Internal error: checking accepted permissions  failed');
-      });
+      }
    }
 };

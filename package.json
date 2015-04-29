@@ -19,6 +19,7 @@
     "redis": "",
     "jsonwebtoken":"",
     "deep-equal"  : "",
+    "commander"   : "",
     "m2node"      : "OPENi-ict/m2node"
   }
 }

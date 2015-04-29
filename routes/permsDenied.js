@@ -5,31 +5,34 @@
 
 var jwt        = require('jwt-simple');
 
-var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
+module.exports = function(cmd_args) {
 
-module.exports = function (req, res, next) {
+   return function (req, res, next) {
 
-    //first step: validate token
-    console.log("permsDenied", req.sessionID);
+      var seckeyenc = cmd_args.seckeyenc
 
-    var validated = false;
+      //first step: validate token
+      //console.log("permsDenied", req.sessionID);
 
-    var tok = jwt.decode(req.session.authtoken, seckeyenc);
+      var validated = false;
 
-    if (tok.hasOwnProperty("ip")) {
-        if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
+      var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
+      if (tok.hasOwnProperty("ip")) {
+         if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
             validated = true;
-        }
-    }
+         }
+      }
 
-   console.log("permsDenied", validated);
+      //console.log("permsDenied", validated);
 
-    //proceed only if validated
-    if (validated) {
-        var linkg = req.session.redURL + "?OUST=" + req.session.token + "&ERROR=error_permissions";
+      //proceed only if validated
+      if (validated) {
+         var linkg = req.session.redURL + "?OUST=" + req.session.token + "&ERROR=error_permissions";
 
-        console.log("permsDenied", linkg);
+         //console.log("permsDenied", linkg);
 
-        res.redirect(500, linkg);
-    }
+         res.redirect(500, linkg);
+      }
+   }
 };

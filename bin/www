@@ -1,10 +1,19 @@
 #!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 
-var app    = require('../app');
+var args = require('commander');
+
+args
+  .version('0.0.1')
+  .option('-s, --seckeyenc [value]', 'Secret key')
+  .option('-p, --auth_server_public_key [value]', 'Auth Servers Public Key')
+
+  .parse(process.argv);
+
+
+var app    = require('../app')(args);
 var debug  = require('debug')('auth test:server');
 var http   = require('http');
 var m2node = require('m2node');

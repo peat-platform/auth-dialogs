@@ -104,8 +104,7 @@ function createUser(username, password) {
             if (res.indexOf("Error") != -1) {
 
                 if (res.indexOf("exists") !=-1){
-                    custAlert("Same user exists!");
-
+                    custAlert("An account with that username already exists! Please try another.");
                 } else {
                     custAlert(res);
 
@@ -141,6 +140,7 @@ function loginUser(username, password) {
         crossDomain: true,
         data: dt,
         success: function (res) {
+           console.log("res ",  res);
 
             if (res.indexOf("/auth/permissions") !== -1) {
                 window.open( res, "_self")
@@ -153,7 +153,9 @@ function loginUser(username, password) {
             }
         },
         error: function (error) {
-            console.log("failed with " + error.status);
+           custAlert(error.responseText);
+           console.log("failed with ",  error.responseText);
+           console.log("failed with " + error.status);
         }
     });
 

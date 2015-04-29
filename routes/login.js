@@ -4,14 +4,6 @@ var jwt        = require('jwt-simple');
 var postScript = require('./postScript');
 
 
-var auth_server_public_key = '-----BEGIN PUBLIC KEY-----\n'+
-'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKT8kGk6ZNo3sC4IIo29leRLVD23T2r0\n'+
-'vWXBEkk2pV42HsxKAmPs789AGHH9XwbGpD7FvrcBWWgb65v32Hg/NGkCAwEAAQ==\n'+
-'-----END PUBLIC KEY-----';
-
-var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
-
-
 var checkPerms = function(req, res, next) {
 
    var redurl  = req.session.redURL;
@@ -51,62 +43,70 @@ var checkPerms = function(req, res, next) {
 /*==================*/
 /* post login creds */
 /*==================*/
-module.exports = function (req, res, next) {
+module.exports = function(cmd_args) {
 
-   var validated = false;
-   //var tok = jwt.decode(req.session.authtoken, seckeyenc);
-   var tok = jwt.decode(req.session.authtoken, seckeyenc);
+   return function (req, res, next) {
 
-   if (tok.hasOwnProperty("ip")) {
-      if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
-         validated = true;
+      var validated              = false;
+      var seckeyenc              = cmd_args.seckeyenc
+      var auth_server_public_key = cmd_args.auth_server_public_key.replace(/'/g, "").replace(/"/g, '').replace(/\\n/g, "\n")
+
+      //var tok = jwt.decode(req.session.authtoken, seckeyenc);
+      var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
+      if (tok.hasOwnProperty("ip")) {
+         if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
+            validated = true;
+         }
       }
-   }
 
-   //proceed only if validated
-   if (validated) {
-      //get session token from OPENi
-      var path = "/api/v1/auth/authorizations";
+      //proceed only if validated
+      if (validated) {
+         //get session token from OPENi
+         var path = "/api/v1/auth/authorizations";
 
-      var data = {
-         "username" : req.body.username,
-         "password" : req.body.password,
-         "api_key"  : req.session.api_key,
-         "secret"   : req.session.secret
-      };
+         var data = {
+            "username": req.body.username,
+            "password": req.body.password,
+            "api_key" : req.session.api_key,
+            "secret"  : req.session.secret
+         };
 
-      var redurl = req.session.redURL;
+         var redurl = req.session.redURL;
 
-      postScript("POST", data, path, null, function (auth_endpoint_resp) {
-         //success: send url so that client redirects
-         // redirect to redirectURI only if there is no error
+         postScript("POST", data, path, null, function (auth_endpoint_resp) {
+            //success: send url so that client redirects
+            // redirect to redirectURI only if there is no error
 
-         if (auth_endpoint_resp.error === undefined) {
+            if (auth_endpoint_resp.error === undefined) {
 
-            jwt2.verify(auth_endpoint_resp.session, auth_server_public_key, function (err, token) {
+               jwt2.verify(auth_endpoint_resp.session, auth_server_public_key, function (err, token) {
 
-               if (undefined !== err && null !== err) {
-                  res.send(err);
-               }
-               else {
-                  req.session.token = auth_endpoint_resp.session;
-                  checkPerms(req, res, next);
-               }
-            });
-         }
-         else {
-            if (auth_endpoint_resp.error === "Auth failed, check username, password, and api keys." ||
-                        auth_endpoint_resp.error === "Error reading entity: Entity with that id does not exist" ){
-               auth_endpoint_resp.error = "Login Failed, please try again.";
+                  if (undefined !== err && null !== err) {
+                     console.log(err)
+                     res.status(500).send(err);
+                  }
+                  else {
+                     req.session.token = auth_endpoint_resp.session;
+                     checkPerms(req, res, next);
+                  }
+               });
             }
-            res.send(auth_endpoint_resp.error);
-         }
-      }, function () {
+            else {
+               if (auth_endpoint_resp.error === "Auth failed, check username, password, and api keys." ||
+                  auth_endpoint_resp.error === "Error reading entity: Entity with that id does not exist") {
+                  auth_endpoint_resp.error = "Login Failed, please try again.";
+               }
+               res.status(500).send(auth_endpoint_resp.error);
+            }
+         }, function () {
 
-         res.status(500).send('OPENi internal error');
-      });
-   } else {
-      //jwt auth failed
-      res.status(401).send('Authentication failed')
+            res.status(500).send('OPENi internal error');
+         });
+      }
+      else {
+         //jwt auth failed
+         res.status(401).send('Authentication failed')
+      }
    }
 };
