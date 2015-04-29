@@ -4,14 +4,23 @@ var postScript = require('./postScript');
 function getTypes2(dat, callback) {
 
     var types = {};
-    console.log("yea");
+    //console.log("yea");
     dat.forEach(function (obj) {
-        var name = obj['@reference'];
-        var id = obj['@id'];
-        name = name.replace('_post', '');
-        types[id] = name;
+       types[obj["@reference"]] = obj
+       types[obj["@id"]]        = obj
     });
     callback(types);
+}
+
+
+var extractMembers = function(type){
+   var arr = []
+   for(c in type['@context']){
+      var entry = type['@context'][c];
+      arr.push(entry['@property_name'])
+   }
+
+   return arr;
 }
 
 
@@ -21,15 +30,15 @@ function getTypes2(dat, callback) {
 module.exports = function (req, res, next) {
 
     //ID - name match for proper view
-    console.log(req.sessionID);
-    console.log("\n\n");
     var headi = {
         "Authorization": req.session.token
     };
-    var path = "/api/v1/app_permissions/" + req.session.api_key;
-    postScript("GET", {}, path, headi, function (datat3) {
 
-        var app_perms = datat3.result[datat3.result.length -1]
+    var path = "/api/v1/app_permissions/" + req.session.api_key;
+
+    postScript("GET", {}, path, headi, function (app_perms) {
+
+        var app_perms = app_perms.result[app_perms.result.length -1]
         req.session.appPerms = app_perms;
 
         if (undefined == app_perms){
@@ -41,36 +50,51 @@ module.exports = function (req, res, next) {
             //prepare html string based on manifest
             var app_perms = '';
             var showjson = {};
+            var level    = {}
             //USE getTypes for BASE 64
             
             if (req.session.appPerms.hasOwnProperty("types")) {
 
-                getTypes2(req.session.appPerms.types, function (names) {
+                getTypes2(req.session.appPerms.types, function (typesById) {
 
-                    console.log('Got');
-                    console.log(names);
-                    console.log(testAppPermJson);
+                    //console.log("permissions.js", 'Got');
+                    //console.log("permissions.js", 'typesById', typesById);
 
                     testAppPermJson.forEach(function (obj) {
 
-                        console.log(obj.id);
-                        var idaki = names[obj.ref];
-                        console.log(idaki);
+                       //console.log("permissions.js", "obj", obj);
+                       //console.log("permissions.js", "obj.ref", obj.ref);
+                       //console.log("permissions.js", "typesById[obj.ref]", typesById[obj.ref]);
 
-                        if (typeof showjson[idaki] == 'undefined') {
-                            showjson[idaki] = [];
-                            showjson[idaki].push(obj.access_type);
-                        } else {
-                            showjson[idaki].push(obj.access_type);
+                        var type = typesById[obj.ref];
+
+                        //console.log("permissions.js", type);
+
+                        if (typeof showjson[type['@reference']] == 'undefined') {
+                           showjson[type['@reference']] = [];
                         }
+                       showjson[type['@reference']].push(obj.access_type);
+                       if (undefined === level[type['@reference']] || level[type['@reference']] === 'APP'){
+                          level[type['@reference']] = obj.access_level
+                       }
                     });
 
                     for (var key in showjson) {
                         app_perms += ('<div class="contA">' +
-                        '<div style="font-weight: bold">' + key + '</div>' +
-                        '<div>Permission Types: ' + showjson[key].toString().replace(/,/g, ', ') + '</div>' +
+                        '<div style="font-weight: bold">Your ' + key + ' data.</div>' +
+                        '<a class="moreDetails">More Details</a>' +
+                        '<div class="permissionsDetails">' +
+                           '<div>Contains this information: ' + extractMembers(typesById[key]).join(', ') + '</div>' +
+                           '<div>Type of Access Requested: ' + showjson[key].toString().replace(/,/g, ', ') + '</div>' +
+                        (('APP' === level[key]) ? '<div>Access request limited to data created by this app.</div>' :
+                           '<div>This app Requests access to data created by other apps.</div>' )+
+                        '</div>' +
                         '</div>');
                     }
+
+                   //console.log(">> showjson", showjson)
+                   //console.log(">>",          {app_perms: app_perms})
+
                     res.render('app_perm.ejs', {app_perms: app_perms});
                     //res.send()
                 });

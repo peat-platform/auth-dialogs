@@ -25,10 +25,10 @@ module.exports = function (req, res, next) {
         
         if (req.session.appPerms.hasOwnProperty("permissions")) {
 
-            var data = req.session.appPerms.permissions;
+            var data   = req.session.appPerms.permissions;
             var redurl = req.session.redURL;
-            var toki = req.session.token;
-            var headi = {
+            var toki   = req.session.token;
+            var headi  = {
                 "Authorization": toki
             };
 

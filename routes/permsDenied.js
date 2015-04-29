@@ -10,8 +10,8 @@ var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
 module.exports = function (req, res, next) {
 
     //first step: validate token
-    console.log(req.sessionID);
-    console.log("\n\n");
+    console.log("permsDenied", req.sessionID);
+
     var validated = false;
 
     var tok = jwt.decode(req.session.authtoken, seckeyenc);
@@ -22,11 +22,14 @@ module.exports = function (req, res, next) {
         }
     }
 
+   console.log("permsDenied", validated);
+
     //proceed only if validated
     if (validated) {
-        //req.session.accept = false;
-
         var linkg = req.session.redURL + "?OUST=" + req.session.token + "&ERROR=error_permissions";
-        res.redirect(linkg);
+
+        console.log("permsDenied", linkg);
+
+        res.redirect(500, linkg);
     }
 };

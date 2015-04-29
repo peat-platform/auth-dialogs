@@ -1,9 +1,6 @@
 var express = require('express');
 var router  = express();
 
-var path    = require('path');
-var https   = require('https');
-var jwt     = require('jwt-simple');
 
 var loginAction       = require('./login')
 var accountAction     = require('./account')

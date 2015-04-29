@@ -4,8 +4,9 @@
  */
 
 function getURLparam(name) {
-    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
-        return decodeURIComponent(name[1]);
+    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search)) {
+       return decodeURIComponent(name[1]);
+    }
 }
 
 
@@ -15,12 +16,13 @@ $(" #accept_permapp").click(function () {
     //for now we accept everything.
     var dt = {
         "all": 'yes'
-    };
+    }
+
     dt = JSON.stringify(dt);
 
     $.ajax({
         type: "POST",
-        url: "https://" + window.location.host + "/auth/accept",
+        url: "/auth/accept",
         contentType: "application/json",
         crossDomain: true,
         data: dt,
@@ -45,7 +47,8 @@ $(" #cancel_permapp").click(function () {
 
     $.ajax({
         type: "POST",
-        url: "https://" + window.location.host + "/auth/cancel",
+        url: "/auth/cancel",
+        //url: "https://" + window.location.host + "/auth/cancel",
         contentType: "application/json",
         crossDomain: true,
         data: "",
@@ -91,3 +94,17 @@ function getCookie(cname) {
     }
     return "";
 }
+
+
+$(".moreDetails").click( function(){
+      var but = $(this)
+      if (but.html() === "More Details"){
+         but.parents().find(".permissionsDetails").show();
+         but.html("Hide Details")
+      }
+      else{
+         but.parents().find(".permissionsDetails").hide();
+         but.html("More Details")
+      }
+   }
+);

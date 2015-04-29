@@ -1,6 +1,6 @@
 var deepEqual  = require('deep-equal');
-var jwt2        = require('jsonwebtoken');
-var jwt       = require('jwt-simple');
+var jwt2       = require('jsonwebtoken');
+var jwt        = require('jwt-simple');
 var postScript = require('./postScript');
 
 
@@ -14,8 +14,9 @@ var seckeyenc = 'oMF81IOFsZ0bvzSdcBVr';
 
 var checkPerms = function(req, res, next) {
 
-   var redurl = req.session.redURL;
-   var path = "/api/v1/permissions";
+   var redurl  = req.session.redURL;
+   var path    = "/api/v1/permissions";
+
    var headers = {
       "Authorization": req.session.token
    };
@@ -55,64 +56,50 @@ module.exports = function (req, res, next) {
    var validated = false;
    //var tok = jwt.decode(req.session.authtoken, seckeyenc);
    var tok = jwt.decode(req.session.authtoken, seckeyenc);
+
    if (tok.hasOwnProperty("ip")) {
       if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
          validated = true;
       }
    }
+
    //proceed only if validated
    if (validated) {
       //get session token from OPENi
       var path = "/api/v1/auth/authorizations";
 
       var data = {
-         "username": req.body.username,
-         "password": req.body.password,
-         "api_key": req.session.api_key,
-         "secret": req.session.secret
+         "username" : req.body.username,
+         "password" : req.body.password,
+         "api_key"  : req.session.api_key,
+         "secret"   : req.session.secret
       };
+
       var redurl = req.session.redURL;
-      postScript("POST", data, path, null, function (datat) {
+
+      postScript("POST", data, path, null, function (auth_endpoint_resp) {
          //success: send url so that client redirects
          // redirect to redirectURI only if there is no error
 
-         if (typeof datat.error === 'undefined') {
+         if (auth_endpoint_resp.error === undefined) {
 
-            jwt2.verify(datat.session, auth_server_public_key, function (err, token) {
+            jwt2.verify(auth_endpoint_resp.session, auth_server_public_key, function (err, token) {
 
                if (undefined !== err && null !== err) {
                   res.send(err);
                }
                else {
-                  req.session.token = datat.session;
+                  req.session.token = auth_endpoint_resp.session;
                   checkPerms(req, res, next);
-
-                  // path = "/api/v1/permissions";
-                  //var headi = {
-                  //    "Authorization": req.session.token
-                  //};
-                  //
-                  //postScript("GET", {}, path, headi, function (datat2) {
-                  //    //success: send url so that client redirects
-                  //    // redirect to redirectURI only if there is no error
-                  //    console.log(datat2);
-                  //
-                  //    if ( comparePermissions(datat2, JSON.parse(req.session.appPerms)) ) {
-                  //        var rdl = req.query.redirectURL + '?OUST=' + req.session.token;
-                  //        res.redirect(rdl);
-                  //    } else {
-                  //        res.redirect('/auth/permsDenied');
-                  //        //res.redirect('/auth/permissions');
-                  //
-                  //    }
-                  //}, function () {
-                  //    res.status(500).send('OPENi Internal error: checking accepted permissions  failed');
-                  //});
                }
             });
          }
          else {
-            res.send(datat.error);
+            if (auth_endpoint_resp.error === "Auth failed, check username, password, and api keys." ||
+                        auth_endpoint_resp.error === "Error reading entity: Entity with that id does not exist" ){
+               auth_endpoint_resp.error = "Login Failed, please try again.";
+            }
+            res.send(auth_endpoint_resp.error);
          }
       }, function () {
 
