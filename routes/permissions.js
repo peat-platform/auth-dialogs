@@ -6,6 +6,9 @@ function getTypes2(dat, callback) {
     var types = {};
     //console.log("yea");
     dat.forEach(function (obj) {
+       if (null === obj){
+          return;
+       }
        types[obj["@reference"]] = obj
        types[obj["@id"]]        = obj
     });
