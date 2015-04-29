@@ -36,11 +36,11 @@ module.exports = function(cmd_args) {
          "Authorization": req.session.token
       };
 
-      var path = "/api/v1/app_permissions/" + req.session.api_key;
+      var path = "/api/v1/app_permissions_latest/" + req.session.api_key;
 
       postScript("GET", {}, path, headi, function (app_perms) {
 
-         var app_perms = app_perms.result[app_perms.result.length - 1]
+         var app_perms = app_perms.result[0]
          req.session.appPerms = app_perms;
 
          if (undefined == app_perms) {
@@ -59,8 +59,6 @@ module.exports = function(cmd_args) {
 
                getTypes2(req.session.appPerms.types, function (typesById) {
 
-                  //console.log("permissions.js", 'Got');
-                  //console.log("permissions.js", 'typesById', typesById);
 
                   testAppPermJson.forEach(function (obj) {
 

@@ -15,11 +15,11 @@ var checkPerms = function(req, res, next) {
 
    postScript("GET", {}, path, headers, function (resp_data) {
 
-      path = "/api/v1/app_permissions/" + req.session.api_key;
+      path = "/api/v1/app_permissions_latest/" + req.session.api_key;
 
       postScript("GET", {}, path, headers, function (datat3) {
 
-         var app_perms = datat3.result[datat3.result.length -1]
+         var app_perms = datat3.result[0]
 
          req.session.appPerms = app_perms;
 
