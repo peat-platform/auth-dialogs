@@ -71,6 +71,10 @@ module.exports = function(cmd_args) {
 
                      var type = typesById[obj.ref];
 
+                     if (undefined === type){
+                        return;
+                     }
+
                      //console.log("permissions.js", type);
 
                      if (typeof showjson[type['@reference']] == 'undefined') {
