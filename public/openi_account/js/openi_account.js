@@ -32,12 +32,13 @@ function onClickRegisterButton() {
                 custAlert("Confirmation password is required");
                 validated = false;
             } else {
-                if (confirmPassword != "" && password != "") {
+                if (confirmPassword !== "" && password !== "") {
                     if (confirmPassword != password) {
                         custAlert("Passwords do not match");
                         validated = false;
-                    } else {
-                        if (!$("#accept-openi").is(':checked')) {
+                    }
+                    else {
+                        if ( !$("#accept-openi").is(':checked') ) {
                             custAlert("You must accept OPENi terms and conditions");
                             validated = false
                         }
@@ -167,8 +168,9 @@ function custAlert(text) {
 }
 
 function getURLparam(name) {
-    if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
-        return decodeURIComponent(name[1]);
+    if (name === (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search)){
+       return decodeURIComponent(name[1]);
+    }
 }
 
 function isValidJSON(str) {
@@ -218,8 +220,12 @@ function getCookie(cname) {
     var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        while (c.charAt(0) === ' ') {
+           c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+           return c.substring(name.length, c.length);
+        }
     }
     return "";
 }
