@@ -57,15 +57,14 @@ module.exports = function(cmd_args) {
 
                //console.log("account.js", "app_perms", app_perms );
 
-               var app_perms = app_perms.result[0]
-
-               //console.log("account.js", "app_perms", app_perms );
-
                if (undefined == app_perms) {
                   //console.log("account.js", "1" );
                   res.status(500).send('OPENi Internal error: permission not set for this app.');
+                  return;
                }
-               else if (app_perms.hasOwnProperty("permissions")) {
+               var app_perms = app_perms.result[0]
+
+               if (app_perms.hasOwnProperty("permissions")) {
                   //console.log("account.js", "2" );
                   //req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
                   if (deepEqual(user_app_perms, app_perms["permissions"])) {
