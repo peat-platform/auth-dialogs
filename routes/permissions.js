@@ -20,7 +20,7 @@ var extractMembers = function(type){
    var arr = []
    for(c in type['@context']){
       var entry = type['@context'][c];
-      arr.push(entry['@property_name'])
+      arr.push(entry['@context_id'])
    }
 
    return arr;

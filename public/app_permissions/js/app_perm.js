@@ -95,11 +95,11 @@ function getCookie(cname) {
 $(".moreDetails").click( function(){
       var but = $(this)
       if (but.html() === "More Details"){
-         but.parents().find(".permissionsDetails").show();
+         but.parent().find(".permissionsDetails").show();
          but.html("Hide Details")
       }
       else{
-         but.parents().find(".permissionsDetails").hide();
+         but.parent().find(".permissionsDetails").hide();
          but.html("More Details")
       }
    }
