@@ -11,7 +11,6 @@ var isTypeId = function(path){
 function getTypes2(dat, callback) {
 
     var types = {};
-    //console.log("yea");
     dat.forEach(function (obj) {
        if (null === obj){
           return;
@@ -19,12 +18,6 @@ function getTypes2(dat, callback) {
        types[obj["@reference"]] = obj
        types[obj["@id"]]        = obj
     });
-
-
-   //for ( var obj in types) {
-   //   console.log(">>>", obj)
-   //   console.log(">>>", types[obj])
-   //}
 
     callback(types);
 }
@@ -95,7 +88,6 @@ var objToHTML = function(val){
 
    html += "<li>" + val["@reference"] + "</li><ul>"
 
-   console.log(html)
    for (var j = 0; j < val["@context"].length; j++){
       if (isObj(val["@context"][j]['@openi_type'])){
          html += objToHTML(val["@context"][j]['@openi_type'])
@@ -145,7 +137,7 @@ var getProps = function(type){
 }
 
 
-var organiseTypes = function(types, showjson){
+var organiseTypes = function(types, showjson, key){
 
    var sanityCheck = 0;
    var processed   = {}
@@ -187,29 +179,24 @@ var organiseTypes = function(types, showjson){
          }
       }
    }
-
-   var util = require('util');
-
-   console.log("}}}>>>")
-   console.log("}}}>>>")
-   console.log("}}}>>>", showjson)
+}
 
 
-   console.log(util.inspect(types, false, null));
-
+var printObjectMembers = function(types, key){
 
    var html = "<ul>"
 
-   for (var name in types){
-      var type = types[name]
-      html += objToHTML(type)
+   for (var name in types) {
+      if (key === name) {
+         var type = types[name]
+         html += objToHTML(type)
+      }
    }
 
    html += "</ul>"
 
    return html
 }
-
 
 var extractMembers2 = function(type){
 
@@ -302,9 +289,9 @@ module.exports = function(cmd_args) {
 
                   });
 
-                  console.log("showjson", showjson)
 
-                  var detailsStr = organiseTypes(typesById, showjson)
+                  organiseTypes(typesById, showjson)
+
 
                   for (var key in showjson) {
                      var entry = showjson[key]
@@ -318,8 +305,9 @@ module.exports = function(cmd_args) {
                      app_perms += (('APP' === showjson[key].level) ? '' : '<div>This app wants access to data in your account that are created by other apps.</div>' )
                      app_perms += '<a class="moreDetails">More Details</a>';
                      app_perms += '<div class="permissionsDetails">"' + entry.name + '" data entries contain the following information: ';
-                     app_perms += detailsStr
 
+                     //app_perms += organiseTypes(typesById, showjson, key)
+                     app_perms += printObjectMembers(typesById, key)
 
                      app_perms += '</div></div>';
                   }
