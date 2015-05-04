@@ -45,7 +45,6 @@ $(" #cancel_permapp").click(function () {
     $.ajax({
         type: "POST",
         url: "/auth/cancel",
-        //url: "https://" + window.location.host + "/auth/cancel",
         contentType: "application/json",
         crossDomain: true,
         data: "",

@@ -57,9 +57,9 @@ module.exports = function(cmd_args) {
 
                //console.log("account.js", "app_perms", app_perms );
 
-               if (undefined === app_perms || undefined == app_perms.result) {
+               if (undefined === app_perms || undefined === app_perms.result || undefined === app_perms.result[0] ) {
                   //console.log("account.js", "1" );
-                  res.status(500).send('OPENi Internal error: permission not set for this app.');
+                  res.status(500).send('Internal error: permission not set for this app.');
                   return;
                }
 
@@ -81,17 +81,17 @@ module.exports = function(cmd_args) {
                }
                else {
                   //console.log("account.js", "5" );
-                  res.status(500).send('OPENi Internal error: getting app permissions  failed');
+                  res.status(500).send('Internal error: getting app permissions  failed');
                }
 
             }, function () {
                //console.log("account.js", "6" );
-               res.status(500).send('OPENi Internal error: getting app permissions  failed');
+               res.status(500).send('Internal error: getting app permissions  failed');
             });
 
          }, function () {
             //console.log("account.js", "7" );
-            res.status(500).send('OPENi Internal error: checking accepted permissions  failed');
+            res.status(500).send('Internal error: checking accepted permissions  failed');
          });
       }
    }

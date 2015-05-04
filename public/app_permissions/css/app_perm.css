@@ -48,11 +48,13 @@ body {
 
 .permissionsDetails{
     display: none;
+    font-size: 12px;
 }
 
 .moreDetails{
     font-size: 15px;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .acc {
@@ -141,6 +143,11 @@ body {
     padding: 10px 15px 10px 15px;
     font-size: 17px;
 }
+
+.contA .opts{
+    font-size: 12px;
+}
+
 .contB {
 	width:38%;
 	float:left;

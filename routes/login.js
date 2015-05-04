@@ -24,7 +24,7 @@ var checkPerms = function(req, res, next) {
          req.session.appPerms = app_perms;
 
          if (undefined == app_perms){
-            res.status(500).send('OPENi Internal error: permission not set for this app.');
+            res.status(500).send('Internal error: permission not set for this app.');
          }
          else if (deepEqual(resp_data, req.session.appPerms["permissions"])) {
             var nexttt = redurl + "?OUST=" + req.session.token;
@@ -34,7 +34,7 @@ var checkPerms = function(req, res, next) {
             res.send('/auth/permissions');
          }
       }, function () {
-         res.status(500).send('OPENi Internal error: getting app permissions  failed');
+         res.status(500).send('Internal error: getting app permissions  failed');
       });
    });
 };
@@ -101,7 +101,7 @@ module.exports = function(cmd_args) {
             }
          }, function () {
 
-            res.status(500).send('OPENi internal error');
+            res.status(500).send('Internal error');
          });
       }
       else {

@@ -46,13 +46,13 @@ module.exports = function(cmd_args) {
                   res.send(datat.error);
                }
             }, function () {
-               res.status(500).send('OPENi Internal error: accepting permissions failed');
+               res.status(500).send('Internal error: accepting permissions failed');
             });
 
          }
          else {
 
-            res.status(500).send('OPENi Internal error: getting app permissions failed');
+            res.status(500).send('Internal error: getting app permissions failed');
 
          }
 

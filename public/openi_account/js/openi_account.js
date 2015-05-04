@@ -39,7 +39,7 @@ function onClickRegisterButton() {
                     }
                     else {
                         if ( !$("#accept-openi").is(':checked') ) {
-                            custAlert("You must accept OPENi terms and conditions");
+                            custAlert("You must accept PEAT's terms and conditions");
                             validated = false
                         }
                     }
@@ -229,3 +229,12 @@ function getCookie(cname) {
     }
     return "";
 }
+
+
+$("#findMorePeat").click(function(){
+   custAlert("PEAT is a secure web service that aims to give you better control over your " +
+   "personal data. An app cannot view, change, or delete your data without your explicit permission." +
+   "To view the data in your account just swipe to the right on any PEAT enabled application and " +
+   "click on the 'OPEN DASHBOARD' button. This will open a portal to your PEAT account from which you " +
+   "can view and control the access to your data.");
+})

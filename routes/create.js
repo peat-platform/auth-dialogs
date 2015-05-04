@@ -53,13 +53,13 @@ module.exports = function(cmd_args) {
                      res.send(data3.error);
                   }
                }, function () {
-                  res.status(500).send('OPENi Internal error: session token generation failed');
+                  res.status(500).send('Internal error: session token generation failed');
                });
             }
          }, function () {
             //error;
             console.log("error");
-            res.status(500).send('OPENi Internal error: register failed');
+            res.status(500).send('Internal error: register failed');
          });
       }
       else {
