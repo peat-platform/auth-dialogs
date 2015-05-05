@@ -37,7 +37,6 @@ module.exports = function(cmd_args) {
       req.session.authtoken = jwt.encode(payload, seckeyenc);
 
       if (req.session.token === undefined) {
-         //console.log("account.js", "10" );
          res.render("openi_account")
       }
       else {
@@ -62,9 +61,10 @@ module.exports = function(cmd_args) {
                   res.status(500).send('Internal error: permission not set for this app.');
                   return;
                }
-               req.session.appPerms = app_perms
 
                var app_perms = app_perms.result[0]
+               
+               req.session.appPerms = app_perms
 
                if (app_perms.hasOwnProperty("permissions")) {
                   //console.log("account.js", "2" );
