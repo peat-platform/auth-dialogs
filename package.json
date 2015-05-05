@@ -1,0 +1,25 @@
+{
+  "name": "auth_test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "",
+    "cookie-parser": "",
+    "debug": "~2.1.1",
+    "ejs": "~2.1.4",
+    "express": "",
+    "express-session": "",
+    "jwt-simple": "^0.2.0",
+    "morgan": "~1.5.1",
+    "serve-favicon": "~2.2.0",
+    "connect-redis": "",
+    "redis": "",
+    "jsonwebtoken":"",
+    "deep-equal"  : "",
+    "commander"   : "",
+    "m2node"      : "OPENi-ict/m2node"
+  }
+}

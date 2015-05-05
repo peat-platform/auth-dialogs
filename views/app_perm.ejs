@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>PEAT App Permissions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="../openi-css/bootstrap.min.css">
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <link href="../app_permissions/css/app_perm.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="modal-header hidden-xs">
+    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+    <!--<div class="h_icon"><img src="images/settings_icon.png" width="42" height="42"/></div>-->
+    <h3>App Authorisation Page</h3>
+</div>
+<div id="permconti" class="container" style="padding: 15px;background: #212122;max-width: 640px;border-radius: 4px;margin-bottom: 10px;">
+
+    <!--  ----------------   Header    ----------------  -->
+
+    <!--<div class="header">
+        <div class="h_icon"><img src="images/settings_icon.png" width="42" height="42"/></div>
+        <div class="title">OPENi Permissions</div>
+    </div>-->
+    <!--  --------------   end- Header    ------------  -->
+
+    <!--  ----------------   acc    ----------------  -->
+    <div class="acc">
+       <div class="acc_title">This App whats to store the following data in your PEAT account:</div>
+    </div>
+
+    <div class="acc_cont">
+
+        <div id="permCont">
+            <%- app_perms %>
+        </div>
+
+        <div class="clearfix"></div>
+
+    </div>
+
+    <!--  ----------------   FOOTER    ----------------  -->
+    <div class="footer">
+        <div id="cancel_permapp" class="f_link01"><a>CANCEL</a></div>
+        <div id="accept_permapp" class="f_link02"><a>APPROVE</a></div>
+    </div>
+    <!--  --------------   end- FOOTER    ------------  -->
+
+</div>
+
+<button id="alertBtn" type="button" class="btn btn-primary hidden" data-toggle="modal" data-target=".modal">Alert</button>
+
+<div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Alert</h4>
+            </div>
+            <div class="modal-body custAlert">
+                :)
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--<script src="js/swagger.js"></script>
+<script src="js/shred.bundle.js"></script>
+<script src="js/init.js"></script>-->
+<script src="../app_permissions/js/app_perm.js"></script>
+
+</body>
+</html>

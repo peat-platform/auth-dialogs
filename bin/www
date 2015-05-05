@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+/**
+ * Module dependencies.
+ */
+
+var args = require('commander');
+
+args
+  .version('0.0.1')
+  .option('-s, --seckeyenc [value]', 'Secret key')
+  .option('-p, --auth_server_public_key [value]', 'Auth Servers Public Key')
+
+  .parse(process.argv);
+
+
+var app    = require('../app')(args);
+var debug  = require('debug')('auth test:server');
+var http   = require('http');
+var m2node = require('m2node');
+
+
+/**
+ * Create HTTP server.
+ */
+
+m2node.run(
+   http.createServer(app), {
+      send_spec: 'tcp://127.0.0.1:49920',
+      recv_spec: 'tcp://127.0.0.1:49919'
+   });
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+//function onListening() {
+//  var addr = server.address();
+//  var bind = typeof addr === 'string'
+//    ? 'pipe ' + addr
+//    : 'port ' + addr.port;
+//  debug('Listening on ' + bind);
+//}
