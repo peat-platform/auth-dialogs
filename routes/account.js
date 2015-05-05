@@ -22,8 +22,8 @@ module.exports = function(cmd_args) {
       var seckeyenc = cmd_args.seckeyenc
 
       req.session.api_key = req.query.api_key;
-      req.session.secret = req.query.secret;
-      req.session.redURL = req.query.redirectURL;
+      req.session.secret  = req.query.secret;
+      req.session.redURL  = req.query.redirectURL;
 
       //COMMENT OUT TO REVERT TO BASE 64 SOLUTION
       //req.session.appPerms = extractPermissions(req);
@@ -62,6 +62,7 @@ module.exports = function(cmd_args) {
                   res.status(500).send('Internal error: permission not set for this app.');
                   return;
                }
+               req.session.appPerms = app_perms
 
                var app_perms = app_perms.result[0]
 
