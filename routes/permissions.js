@@ -245,14 +245,14 @@ module.exports = function(cmd_args) {
 
       postScript("GET", {}, path, headi, function (app_perms) {
 
-         var app_perms = app_perms.result[0]
-
-         req.session.appPerms = app_perms;
-
-         if (undefined === app_perms) {
+         if (undefined === app_perms || undefined === app_perms.result || undefined === app_perms.result[0]) {
             res.status(500).send('Internal error: permission not set for this app.');
          }
          else if (app_perms.hasOwnProperty("permissions")) {
+
+            var app_perms = app_perms.result[0]
+
+            req.session.appPerms = app_perms;
 
             var testAppPermJson = req.session.appPerms.permissions;
             //prepare html string based on manifest

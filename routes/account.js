@@ -63,7 +63,7 @@ module.exports = function(cmd_args) {
                }
 
                var app_perms = app_perms.result[0]
-               
+
                req.session.appPerms = app_perms
 
                if (app_perms.hasOwnProperty("permissions")) {
