@@ -39,8 +39,13 @@ module.exports = function postScript(method, postdata, path, addheaders, success
       });
 
       res.on('end', function () {
-         var resultObject = JSON.parse(responseString);
-         success(resultObject);
+         try{
+            var resultObject = JSON.parse(responseString);
+            success(resultObject);
+         }
+         catch (e) {
+            error(responseString)
+         }
       });
    });
 

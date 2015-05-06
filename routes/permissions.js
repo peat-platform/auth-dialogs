@@ -248,7 +248,7 @@ module.exports = function(cmd_args) {
          if (undefined === app_perms || undefined === app_perms.result || undefined === app_perms.result[0]) {
             res.status(500).send('Internal error: permission not set for this app.');
          }
-         else if (app_perms.hasOwnProperty("permissions")) {
+         else if (app_perms.result[0].hasOwnProperty("permissions")) {
 
             var app_perms = app_perms.result[0]
 
@@ -297,18 +297,21 @@ module.exports = function(cmd_args) {
                   for (var key in showjson) {
                      var entry = showjson[key]
                      app_perms += '<div class="contA"><div style="font-weight: bold">' + entry.name + '</div>';
+                     app_perms += (('APP' === showjson[key].level) ? '' : '<div>This app wants access to data in your account that are created by other apps.</div>' )
+                     app_perms += '<a class="moreDetails">More Details</a>';
+                     app_perms += '<div class="permissionsDetails">' ;
+                     app_perms += '"' + entry.name + '" data entries contain the following information: ';
+
+                     //app_perms += organiseTypes(typesById, showjson, key)
+                     app_perms += printObjectMembers(typesById, key)
+
+                     app_perms += '<div class="type_access_requested">Type of access requested by this app:';
                      app_perms += '<div class="opts">';
                      for (var i =0; i < entry.arr.length; i++){
                         var accReq = entry.arr[i];
                         app_perms += '<input type="checkbox" name="perms" value="' + accReq + '" checked="checked"> ' + accReq + '<br/>';
                      }
-                     app_perms += '</div>';
-                     app_perms += (('APP' === showjson[key].level) ? '' : '<div>This app wants access to data in your account that are created by other apps.</div>' )
-                     app_perms += '<a class="moreDetails">More Details</a>';
-                     app_perms += '<div class="permissionsDetails">"' + entry.name + '" data entries contain the following information: ';
-
-                     //app_perms += organiseTypes(typesById, showjson, key)
-                     app_perms += printObjectMembers(typesById, key)
+                     app_perms += '</div></div>';
 
                      app_perms += '</div></div>';
                   }

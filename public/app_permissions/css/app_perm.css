@@ -49,6 +49,8 @@ body {
 .permissionsDetails{
     display: none;
     font-size: 12px;
+    background-color: #222222;
+    padding: 10px;
 }
 
 .moreDetails{

@@ -72,8 +72,6 @@ module.exports = function(cmd_args) {
             "secret"  : req.session.secret
          };
 
-         var redurl = req.session.redURL;
-
          postScript("POST", data, path, null, function (auth_endpoint_resp) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error

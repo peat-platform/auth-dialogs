@@ -102,17 +102,28 @@ function createUser(username, password) {
         data: dt,
         success: function (res) {
 
-            if (res.indexOf("Error") != -1) {
+           if (res.indexOf("/auth/permissions") !== -1) {
+              window.open( res, "_self")
+           }
+           else if (res.indexOf("OUST") === -1) {
+              custAlert(res);
+           }
+           else {
+              window.open(res, "_self")
+           }
 
-                if (res.indexOf("exists") !=-1){
-                    custAlert("An account with that username already exists! Please try another.");
-                } else {
-                    custAlert(res);
-
-                }
-            } else {
-                window.location.href = "./permissions"
-            }
+            //if (res.indexOf("Error") != -1) {
+            //
+            //    if (res.indexOf("exists") !=-1){
+            //        custAlert("An account with that username already exists! Please try another.");
+            //    } else {
+            //        custAlert(res);
+            //
+            //    }
+            //}
+            //else {
+            //    window.location.href = "./permissions"
+            //}
 
         },
         error: function (error) {
