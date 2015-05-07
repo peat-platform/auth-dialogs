@@ -89,11 +89,11 @@ var objToHTML = function(val){
    html += "<li>" + val["@reference"] + "</li><ul>"
 
    for (var j = 0; j < val["@context"].length; j++){
-      if (isObj(val["@context"][j]['@openi_type'])){
-         html += objToHTML(val["@context"][j]['@openi_type'])
+      if (isObj(val["@context"][j]['@type'])){
+         html += objToHTML(val["@context"][j]['@type'])
       }
       else{
-         html += "<li>" + val["@context"][j]['@context_id'] + "</li>"
+         html += "<li>" + val["@context"][j]['@context'] + "</li>"
       }
    }
    html += '</ul>'
@@ -107,7 +107,7 @@ var objToHTML = function(val){
 var typeHasSubType = function(type){
    for (var i = 0; i < type['@context'].length; i++){
 
-      if ( isTypeId(type['@context'][i]['@openi_type']) ){
+      if ( isTypeId(type['@context'][i]['@type']) ){
          return true;
       }
    }
@@ -118,7 +118,7 @@ var typeHasSubType = function(type){
 var allSubTypesInProcessed = function(type, processed){
    for (var i = 0; i < type['@context'].length; i++){
 
-      var primType = type['@context'][i]['@openi_type']
+      var primType = type['@context'][i]['@type']
 
       if (isTypeId(primType) && undefined === processed[primType]){
          return false
@@ -131,7 +131,7 @@ var allSubTypesInProcessed = function(type, processed){
 var getProps = function(type){
    var props = []
    for (var i = 0; i < type['@context'].length; i++){
-      props.push(type['@context'][i]['@context_id'])
+      props.push(type['@context'][i]['@context'])
    }
    return props;
 }
@@ -162,11 +162,11 @@ var organiseTypes = function(types, showjson, key){
             if(allSubTypesInProcessed(type, processed)){
                for (var i = 0; i < type['@context'].length; i++){
                   var entry = type['@context'][i]
-                  var cname = entry['@openi_type']
+                  var cname = entry['@type']
                   if(isTypeId(cname)){
                      if (undefined !== processed[cname]){
-                        types[name]['@context'][i]['@openi_type'] = types[cname]
-                        var id                                    = entry['@openi_type']
+                        types[name]['@context'][i]['@type'] = types[cname]
+                        var id                                    = entry['@type']
                         delete types[cname]
                         delete showjson[cname]
                      }
@@ -204,13 +204,13 @@ var extractMembers2 = function(type){
    for(c in type['@context']){
       var entry = type['@context'][c];
 
-      if (isTypeId(entry['@openi_type'])){
-         var n = entry['@context_id']
+      if (isTypeId(entry['@type'])){
+         var n = entry['@context']
          var o = { n : ["a", "b", "c"] }
          arr.push(o)
       }
       else{
-         arr.push(entry['@context_id'])
+         arr.push(entry['@context'])
       }
    }
 
@@ -222,7 +222,7 @@ var extractMembers = function(type){
    var arr = []
    for(var c in type['@context']){
       var entry = type['@context'][c];
-      arr.push(entry['@context_id'])
+      arr.push(entry['@context'])
    }
 
    return arr;

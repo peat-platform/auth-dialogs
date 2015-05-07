@@ -20,6 +20,6 @@
     "jsonwebtoken":"",
     "deep-equal"  : "",
     "commander"   : "",
-    "m2node"      : "OPENi-ict/m2node"
+    "m2node"      : "peat-platform/m2node"
   }
 }
