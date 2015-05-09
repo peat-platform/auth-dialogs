@@ -89,8 +89,8 @@ var objToHTML = function(val){
    html += "<li>" + val["@reference"] + "</li><ul>"
 
    for (var j = 0; j < val["@context"].length; j++){
-      if (isObj(val["@context"][j]['@type'])){
-         html += objToHTML(val["@context"][j]['@type'])
+      if (isObj(val["@context"][j]['@data_type'])){
+         html += objToHTML(val["@context"][j]['@data_type'])
       }
       else{
          html += "<li>" + val["@context"][j]['@context'] + "</li>"
@@ -107,7 +107,7 @@ var objToHTML = function(val){
 var typeHasSubType = function(type){
    for (var i = 0; i < type['@context'].length; i++){
 
-      if ( isTypeId(type['@context'][i]['@type']) ){
+      if ( isTypeId(type['@context'][i]['@data_type']) ){
          return true;
       }
    }
@@ -118,7 +118,7 @@ var typeHasSubType = function(type){
 var allSubTypesInProcessed = function(type, processed){
    for (var i = 0; i < type['@context'].length; i++){
 
-      var primType = type['@context'][i]['@type']
+      var primType = type['@context'][i]['@data_type']
 
       if (isTypeId(primType) && undefined === processed[primType]){
          return false
@@ -162,11 +162,11 @@ var organiseTypes = function(types, showjson, key){
             if(allSubTypesInProcessed(type, processed)){
                for (var i = 0; i < type['@context'].length; i++){
                   var entry = type['@context'][i]
-                  var cname = entry['@type']
+                  var cname = entry['@data_type']
                   if(isTypeId(cname)){
                      if (undefined !== processed[cname]){
-                        types[name]['@context'][i]['@type'] = types[cname]
-                        var id                                    = entry['@type']
+                        types[name]['@context'][i]['@data_type'] = types[cname]
+                        var id                                    = entry['@data_type']
                         delete types[cname]
                         delete showjson[cname]
                      }
@@ -204,7 +204,7 @@ var extractMembers2 = function(type){
    for(c in type['@context']){
       var entry = type['@context'][c];
 
-      if (isTypeId(entry['@type'])){
+      if (isTypeId(entry['@data_type'])){
          var n = entry['@context']
          var o = { n : ["a", "b", "c"] }
          arr.push(o)
