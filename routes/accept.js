@@ -18,7 +18,6 @@ module.exports = function(cmd_args) {
             validated = true;
          }
       }
-      console.log("validated", validated);
       //proceed only if validated
       if (validated) {
 
@@ -27,9 +26,27 @@ module.exports = function(cmd_args) {
 
          if (req.session.appPerms.hasOwnProperty("permissions")) {
 
+            for (var i = 0; i < req.session.appPerms.permissions.length; i++){
+               var perm = req.session.appPerms.permissions[i]
+
+               if ('service_enabler' === perm.type){
+
+                  for (var j =0; j < req.session.appPerms.service_enablers.length; j++){
+                     var se = req.session.appPerms.service_enablers[j]
+
+                     if (se.name === perm.ref){
+                        req.session.appPerms.permissions[i].cloudlet = se.cloudlet
+                     }
+                  }
+               }
+            }
+
             var data   = req.session.appPerms.permissions;
             var redurl = req.session.redURL;
             var toki   = req.session.token;
+
+            console.log(data)
+
             var headi  = {
                "Authorization": toki
             };

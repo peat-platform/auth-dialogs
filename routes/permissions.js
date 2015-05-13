@@ -256,7 +256,7 @@ module.exports = function(cmd_args) {
 
             var testAppPermJson = req.session.appPerms.permissions;
             //prepare html string based on manifest
-            var app_perms = '';
+            var app_perms_html = '';
             var showjson  = {};
             var level     = {}
             //USE getTypes for BASE 64
@@ -296,27 +296,52 @@ module.exports = function(cmd_args) {
 
                   for (var key in showjson) {
                      var entry = showjson[key]
-                     app_perms += '<div class="contA"><div style="font-weight: bold">' + entry.name + '</div>';
-                     app_perms += (('APP' === showjson[key].level) ? '' : '<div>This app wants access to data in your account that are created by other apps.</div>' )
-                     app_perms += '<a class="moreDetails">More Details</a>';
-                     app_perms += '<div class="permissionsDetails">' ;
-                     app_perms += '"' + entry.name + '" data entries contain the following information: ';
+                     app_perms_html += '<div class="contA"><div style="font-weight: bold">' + entry.name + '</div>';
+                     app_perms_html += (('APP' === showjson[key].level) ? '' : '<div>This app wants access to data in your account that are created by other apps.</div>' )
+                     app_perms_html += '<a class="moreDetails">More Details</a>';
+                     app_perms_html += '<div class="permissionsDetails">' ;
+                     app_perms_html += '"' + entry.name + '" data entries contain the following information: ';
 
                      //app_perms += organiseTypes(typesById, showjson, key)
-                     app_perms += printObjectMembers(typesById, key)
+                     app_perms_html += printObjectMembers(typesById, key)
 
-                     app_perms += '<div class="type_access_requested">Type of access requested by this app:';
-                     app_perms += '<div class="opts">';
+                     app_perms_html += '<div class="type_access_requested">Type of access requested by this app:';
+                     app_perms_html += '<div class="opts">';
                      for (var i =0; i < entry.arr.length; i++){
                         var accReq = entry.arr[i];
-                        app_perms += '<input type="checkbox" name="perms" value="' + accReq + '" checked="checked"> ' + accReq + '<br/>';
+                        app_perms_html += '<input type="checkbox" name="perms" value="' + accReq + '" checked="checked"> ' + accReq + '<br/>';
                      }
-                     app_perms += '</div></div>';
+                     app_perms_html += '</div></div>';
 
-                     app_perms += '</div></div>';
+                     app_perms_html += '</div></div>';
                   }
 
-                  res.render('app_perm.ejs', {app_perms: app_perms});
+                  var se_title = "<hr/><br/><br/><div class='acc_title'>This App uses the following additional services which depend on accessing the same data.</div>"
+
+                  for (var i = 0; i < app_perms.permissions.length; i++){
+                     var perm = app_perms.permissions[i]
+
+                     if ('service_enabler' === perm.type){
+
+                        if (se_title){
+                           app_perms_html += se_title
+                           se_title = false
+                        }
+
+                        for (var j =0; j < app_perms.service_enablers.length; j++){
+                           var se = app_perms.service_enablers[j]
+
+                           if (se.name === perm.ref){
+                              app_perms_html += "<div class='contA'>"
+                              app_perms_html += "<div style='font-weight: bold'><input type='checkbox' value='"+se.name+"' checked='checked'> " + se.name + "</div>"
+                              app_perms_html += "<div class='permissionsDetails' style='display: block'>" + se.description + "</div>"
+                              app_perms_html += "</div>"
+                           }
+                        }
+                     }
+                  }
+
+                  res.render('app_perm.ejs', {app_perms: app_perms_html});
                   //res.send()
                });
             }
