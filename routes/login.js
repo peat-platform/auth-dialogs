@@ -49,7 +49,7 @@ module.exports = function(cmd_args) {
 
       var validated              = false;
       var seckeyenc              = cmd_args.seckeyenc
-      var auth_server_public_key = cmd_args.auth_server_public_key.replace(/'/g, "").replace(/"/g, '').replace(/\\n/g, "\n")
+      var auth_server_public_key = cmd_args.auth_server_public_key
 
       //var tok = jwt.decode(req.session.authtoken, seckeyenc);
       var tok = jwt.decode(req.session.authtoken, seckeyenc);

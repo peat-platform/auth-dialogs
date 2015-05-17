@@ -41,7 +41,7 @@ var checkPerms = function(req, res, next) {
 module.exports = function(cmd_args) {
 
    var seckeyenc              = cmd_args.seckeyenc
-   var auth_server_public_key = cmd_args.auth_server_public_key.replace(/'/g, "").replace(/"/g, '').replace(/\\n/g, "\n")
+   var auth_server_public_key = cmd_args.auth_server_public_key
 
    return function (req, res, next) {
       // post authorization to openi
