@@ -7,17 +7,17 @@ var postScript = require('./postScript');
 var checkPerms = function(req, res, next) {
 
    var redurl  = req.session.redURL;
-   var path    = "/api/v1/permissions";
+   var path    = "/api/v1/permissions/"+req.session.api_key;
 
    var headers = {
       "Authorization": req.session.token
    };
 
-   postScript("GET", {}, path, headers, function (resp_data) {
+   postScript("GET", 8443, {}, path, headers, function (resp_data) {
 
       path = "/api/v1/app_permissions_latest/" + req.session.api_key;
 
-      postScript("GET", {}, path, headers, function (datat3) {
+      postScript("GET", 8443, {}, path, headers, function (datat3) {
 
          var app_perms = datat3.result[0]
 
@@ -72,7 +72,7 @@ module.exports = function(cmd_args) {
             "secret"  : req.session.secret
          };
 
-         postScript("POST", data, path, null, function (auth_endpoint_resp) {
+         postScript("POST", 443, data, path, null, function (auth_endpoint_resp) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error
 

@@ -243,7 +243,7 @@ module.exports = function(cmd_args) {
 
       var path = "/api/v1/app_permissions_latest/" + req.session.api_key;
 
-      postScript("GET", {}, path, headi, function (app_perms) {
+      postScript("GET", 8443, {}, path, headi, function (app_perms) {
 
          if (undefined === app_perms || undefined === app_perms.result || undefined === app_perms.result[0]) {
             res.status(500).send('Internal error: permission not set for this app.');

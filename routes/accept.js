@@ -21,7 +21,7 @@ module.exports = function(cmd_args) {
       //proceed only if validated
       if (validated) {
 
-         var path = "/api/v1/permissions";
+         var path = "/api/v1/permissions/"+req.session.api_key;
          //prepare the data to send to OPENi
 
          if (req.session.appPerms.hasOwnProperty("permissions")) {
@@ -44,14 +44,11 @@ module.exports = function(cmd_args) {
             var data   = req.session.appPerms.permissions;
             var redurl = req.session.redURL;
             var toki   = req.session.token;
-
-            console.log(data)
-
             var headi  = {
                "Authorization": toki
             };
 
-            postScript("POST", data, path, headi, function (datat) {
+            postScript("POST", 8443, data, path, headi, function (datat) {
                //success: send url so that client redirects
                // redirect to redirectURI only if there is no error
 
