@@ -39,7 +39,7 @@ module.exports = function(cmd_args) {
 
          var headi = {"Authorization": req.session.token};
 
-         postScript("GET", {}, "/api/v1/permissions", headi, function (user_app_perms) {
+         postScript("GET", 8443, {}, "/api/v1/permissions/" + req.query.api_key, headi, function (user_app_perms) {
             //success: send url so that client redirects
             // redirect to redirectURI only if there is no error
 
@@ -47,7 +47,7 @@ module.exports = function(cmd_args) {
 
             var path = "/api/v1/app_permissions_latest/" + req.query.api_key;
 
-            postScript("GET", {}, path, headi, function (app_perms) {
+            postScript("GET", 8443, {}, path, headi, function (app_perms) {
 
                if (undefined === app_perms || undefined === app_perms.result || undefined === app_perms.result[0] ) {
                   //console.log("account.js", "1" );

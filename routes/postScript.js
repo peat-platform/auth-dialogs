@@ -1,7 +1,7 @@
 
 var https   = require('https');
 
-module.exports = function postScript(method, postdata, path, addheaders, success, error) {
+module.exports = function postScript(method, port, postdata, path, addheaders, success, error) {
    "use strict";
    // An object of options to indicate where to post to
    var obj, options, req,
@@ -19,10 +19,12 @@ module.exports = function postScript(method, postdata, path, addheaders, success
       }
    }
 
+   var port = (undefined !== port) ? port : 443 ;
+
    options = {
       //host: '10.130.34.17',
       host: '127.0.0.1',
-      port: 443,
+      port: port,
       path: path,
       method: method,
       headers: headers,

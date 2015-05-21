@@ -6,17 +6,17 @@ var deepEqual  = require('deep-equal');
 var checkPerms = function(req, res, next) {
 
    var redurl  = req.session.redURL;
-   var path    = "/api/v1/permissions";
+   var path    = "/api/v1/permissions/" + req.session.api_key;
 
    var headers = {
       "Authorization": req.session.token
    };
 
-   postScript("GET", {}, path, headers, function (resp_data) {
+   postScript("GET", 8443, {}, path, headers, function (resp_data) {
 
       path = "/api/v1/app_permissions_latest/" + req.session.api_key;
 
-      postScript("GET", {}, path, headers, function (datat3) {
+      postScript("GET", 8443, {}, path, headers, function (datat3) {
          var app_perms = datat3.result[0]
 
          req.session.appPerms = app_perms;
@@ -66,7 +66,7 @@ module.exports = function(cmd_args) {
             "password": req.body.password
          };
 
-         postScript("POST", data, path1, null, function (dat) {
+         postScript("POST", 443, data, path1, null, function (dat) {
             //success
             if (typeof dat.error != 'undefined') {
                res.send(dat.error);
@@ -78,7 +78,7 @@ module.exports = function(cmd_args) {
                   "api_key" : req.session.api_key,
                   "secret"  : req.session.secret
                };
-               postScript("POST", data2, path2, null, function (auth_endpoint_resp) {
+               postScript("POST", 443, data2, path2, null, function (auth_endpoint_resp) {
                   if (auth_endpoint_resp.error === undefined) {
 
                      jwt2.verify(auth_endpoint_resp.session, auth_server_public_key, function (err, token) {
