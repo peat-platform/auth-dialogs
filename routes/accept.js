@@ -10,8 +10,8 @@ module.exports = function(cmd_args) {
       //console.log(req.sessionID);
       //console.log("\n\n");
       var seckeyenc  = cmd_args.seckeyenc
-      var validated = false;
-      var tok = jwt.decode(req.session.authtoken, seckeyenc);
+      var validated  = false;
+      var tok        = jwt.decode(req.session.authtoken, seckeyenc);
 
       if (tok.hasOwnProperty("ip")) {
          if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
@@ -21,29 +21,15 @@ module.exports = function(cmd_args) {
       //proceed only if validated
       if (validated) {
 
-         var path = "/api/v1/permissions/"+req.session.api_key;
+         var path = "/api/v1/permissions/" + req.session.api_key;
          //prepare the data to send to OPENi
 
          if (req.session.appPerms.hasOwnProperty("permissions")) {
 
-            for (var i = 0; i < req.session.appPerms.permissions.length; i++){
-               var perm = req.session.appPerms.permissions[i]
-
-               if ('service_enabler' === perm.type){
-
-                  for (var j =0; j < req.session.appPerms.service_enablers.length; j++){
-                     var se = req.session.appPerms.service_enablers[j]
-
-                     if (se.name === perm.ref){
-                        req.session.appPerms.permissions[i].cloudlet = se.cloudlet
-                     }
-                  }
-               }
-            }
-
             var data   = req.session.appPerms.permissions;
             var redurl = req.session.redURL;
             var toki   = req.session.token;
+
             var headi  = {
                "Authorization": toki
             };

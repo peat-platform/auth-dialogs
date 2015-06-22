@@ -1,7 +1,38 @@
 var jwt        = require('jwt-simple');
 var jwt2       = require('jsonwebtoken');
 var postScript = require('./postScript');
-var deepEqual  = require('deep-equal');
+
+var arrEq = function(a, b){
+   var onlyInA = a.filter(function(current){
+      return b.filter(function(current_b){
+            var b = false;
+            if (current_b.type === "service_enabler" ) {
+               b = ( current_b.cloudlet == current.cloudlet &&  current_b.app_id == current.app_id )
+            }
+            else{
+               b = ( current_b.access_type == current.access_type &&  current_b.access_level == current.access_level )
+            }
+            return current_b.ref == current.ref && current_b.type == current.type && b
+         }).length == 0
+   });
+
+   var onlyInB = b.filter(function(current){
+      return a.filter(function(current_a){
+            var b = false;
+            if (current_a.type === "service_enabler" ) {
+               b = ( current_a.cloudlet == current.cloudlet &&  current_a.app_id == current.app_id )
+            }
+            else{
+               b = ( current_a.access_type == current.access_type &&  current_a.access_level == current.access_level )
+            }
+            return current_a.ref == current.ref && current_a.type == current.type && b
+         }).length == 0
+   });
+
+   var result = onlyInA.concat(onlyInB);
+
+   return ( result.length === 0 ) ? true : false
+}
 
 var checkPerms = function(req, res, next) {
 
@@ -24,7 +55,7 @@ var checkPerms = function(req, res, next) {
          if (undefined === app_perms){
             res.status(500).send('Internal error: permission not set for this app.');
          }
-         else if (deepEqual(resp_data, req.session.appPerms["permissions"])) {
+         else if (arrEq(resp_data, req.session.appPerms["permissions"])) {
             var nexttt = redurl + "?OUST=" + req.session.token;
             res.send(nexttt);
          }

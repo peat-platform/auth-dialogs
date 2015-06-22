@@ -257,8 +257,8 @@ module.exports = function(cmd_args) {
             var testAppPermJson = req.session.appPerms.permissions;
             //prepare html string based on manifest
             var app_perms_html = '';
-            var showjson  = {};
-            var level     = {}
+            var showjson       = {};
+            var level          = {}
             //USE getTypes for BASE 64
 
             if (req.session.appPerms.hasOwnProperty("types")) {
