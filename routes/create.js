@@ -3,6 +3,12 @@ var jwt2       = require('jsonwebtoken');
 var postScript = require('./postScript');
 
 var arrEq = function(a, b){
+
+   if (a.length !== b.length){
+      return false
+   }
+
+
    var onlyInA = a.filter(function(current){
       return b.filter(function(current_b){
             var b = false;

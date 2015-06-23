@@ -3,16 +3,21 @@ var jwt        = require('jwt-simple');
 var postScript = require('./postScript');
 
 var arrEq = function(a, b){
+
+   if (a.length !== b.length){
+      return false
+   }
+
    var onlyInA = a.filter(function(current){
       return b.filter(function(current_b){
             var b = false;
             if (current_b.type === "service_enabler" ) {
-               b = ( current_b.cloudlet == current.cloudlet &&  current_b.app_id == current.app_id )
+               b = ( current_b.cloudlet === current.cloudlet &&  current_b.app_id === current.app_id )
             }
             else{
-               b = ( current_b.access_type == current.access_type &&  current_b.access_level == current.access_level )
+               b = ( current_b.access_type === current.access_type &&  current_b.access_level === current.access_level )
             }
-            return current_b.ref == current.ref && current_b.type == current.type && b
+            return current_b.ref === current.ref && current_b.type === current.type && b
          }).length == 0
    });
 
@@ -20,12 +25,12 @@ var arrEq = function(a, b){
       return a.filter(function(current_a){
             var b = false;
             if (current_a.type === "service_enabler" ) {
-               b = ( current_a.cloudlet == current.cloudlet &&  current_a.app_id == current.app_id )
+               b = ( current_a.cloudlet === current.cloudlet &&  current_a.app_id === current.app_id )
             }
             else{
-               b = ( current_a.access_type == current.access_type &&  current_a.access_level == current.access_level )
+               b = ( current_a.access_type === current.access_type &&  current_a.access_level === current.access_level )
             }
-            return current_a.ref == current.ref && current_a.type == current.type && b
+            return current_a.ref === current.ref && current_a.type === current.type && b
          }).length == 0
    });
 
@@ -53,11 +58,7 @@ var checkPerms = function(req, res, next) {
 
          req.session.appPerms = app_perms;
 
-         console.log("user_app_perms           ",   JSON.stringify(resp_data, null, 2))
-         console.log("app_perms[\"permissions\"] ", JSON.stringify(app_perms["permissions"], null, 2))
-         console.log("equals", arrEq(resp_data, app_perms["permissions"]))
-
-         if (undefined == app_perms){
+         if (undefined === app_perms){
             res.status(500).send('Internal error: permission not set for this app.');
          }
          else if (arrEq(resp_data, req.session.appPerms["permissions"])) {
@@ -68,7 +69,8 @@ var checkPerms = function(req, res, next) {
             res.send('/auth/permissions');
          }
       }, function () {
-         res.status(500).send('Internal error: getting app permissions  failed');
+         console.log("7")
+         res.status(500).send('Internal error: getting app permissions failed');
       });
    });
 };

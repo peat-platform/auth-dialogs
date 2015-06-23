@@ -12,6 +12,11 @@ var extractPermissions = function (req) {
 
 
 var arrEq = function(a, b){
+
+   if (a.length !== b.length){
+      return false
+   }
+
    var onlyInA = a.filter(function(current){
       return b.filter(function(current_b){
             var b = false;
@@ -88,10 +93,6 @@ module.exports = function(cmd_args) {
                }
 
                var app_perms = app_perms.result[0]
-
-               console.log("user_app_perms           ", JSON.stringify(user_app_perms, null, 2))
-               console.log("app_perms[\"permissions\"] ", JSON.stringify(app_perms["permissions"]), null, 2)
-               console.log("equals", arrEq(user_app_perms, app_perms["permissions"]))
 
                req.session.appPerms = app_perms
 
