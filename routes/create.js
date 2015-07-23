@@ -81,7 +81,7 @@ module.exports = function(cmd_args) {
    var auth_server_public_key = cmd_args.auth_server_public_key.replace(/'/g, "").replace(/"/g, '').replace(/\\n/g, "\n")
 
    return function (req, res, next) {
-      // post authorization to openi
+      // post authorization to peat
       //Validate first with jwt key
       //console.log(req.sessionID);
       //console.log("\n\n");

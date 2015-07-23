@@ -98,7 +98,7 @@ module.exports = function(cmd_args) {
 
       //proceed only if validated
       if (validated) {
-         //get session token from OPENi
+         //get session token from PEAT
          var path = "/api/v1/auth/authorizations";
 
          var data = {

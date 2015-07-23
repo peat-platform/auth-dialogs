@@ -4,7 +4,7 @@ var jwt        = require('jwt-simple');
 module.exports = function(cmd_args) {
 
    return function (req, res, next) {
-      // post permissions to openi
+      // post permissions to peat
 
       //first step: validate token
       //console.log(req.sessionID);
@@ -22,7 +22,7 @@ module.exports = function(cmd_args) {
       if (validated) {
 
          var path = "/api/v1/permissions/"+req.session.api_key;
-         //prepare the data to send to OPENi
+         //prepare the data to send to PEAT
 
          if (req.session.appPerms.hasOwnProperty("permissions")) {
 

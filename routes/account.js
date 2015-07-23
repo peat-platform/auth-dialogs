@@ -69,7 +69,7 @@ module.exports = function(cmd_args) {
       req.session.authtoken = jwt.encode(payload, seckeyenc);
 
       if (req.session.token === undefined) {
-         res.render("openi_account")
+         res.render("peat_account")
       }
       else {
          //console.log("account.js", "req.session.token", req.session.token );
@@ -103,7 +103,7 @@ module.exports = function(cmd_args) {
                      res.redirect(req.query.redirectURL + '?OUST=' + req.session.token);
                   }
                   else {
-                     res.render("openi_account");
+                     res.render("peat_account");
                   }
 
                }
