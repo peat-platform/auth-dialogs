@@ -4,14 +4,14 @@ var jwt        = require('jwt-simple');
 module.exports = function(cmd_args) {
 
    return function (req, res, next) {
-      // post permissions to openi
+      // post permissions to peat
 
       //first step: validate token
       //console.log(req.sessionID);
       //console.log("\n\n");
       var seckeyenc  = cmd_args.seckeyenc
-      var validated = false;
-      var tok = jwt.decode(req.session.authtoken, seckeyenc);
+      var validated  = false;
+      var tok        = jwt.decode(req.session.authtoken, seckeyenc);
 
       if (tok.hasOwnProperty("ip")) {
          if (tok.ip == req.headers['x-forwarded-for'] || req.connection.remoteAddress) {
@@ -22,7 +22,7 @@ module.exports = function(cmd_args) {
       if (validated) {
 
          var path = "/api/v1/permissions/"+req.session.api_key;
-         //prepare the data to send to OPENi
+         //prepare the data to send to PEAT
 
          if (req.session.appPerms.hasOwnProperty("permissions")) {
 
@@ -44,20 +44,21 @@ module.exports = function(cmd_args) {
             var data   = req.session.appPerms.permissions;
             var redurl = req.session.redURL;
             var toki   = req.session.token;
+
             var headi  = {
                "Authorization": toki
             };
 
-            postScript("POST", 8443, data, path, headi, function (datat) {
+            postScript("POST", 8443, data, path, headi, function (data) {
                //success: send url so that client redirects
                // redirect to redirectURI only if there is no error
 
-               if (typeof datat.error == 'undefined') {
+               if (typeof data.error == 'undefined') {
                   var nexttt = redurl + "?OUST=" + toki;
                   res.send(nexttt);
                }
                else {
-                  res.send(datat.error);
+                  res.send(data.error);
                }
             }, function () {
                res.status(500).send('Internal error: accepting permissions failed');

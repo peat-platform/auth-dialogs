@@ -1,6 +1,5 @@
 var jwt        = require('jwt-simple');
 var postScript = require('./postScript');
-var deepEqual  = require('deep-equal');
 
 var extractPermissions = function (req) {
     var b64 = req.query.appPerms;
@@ -10,6 +9,44 @@ var extractPermissions = function (req) {
     var perms = new Buffer(b64, 'base64');
     return perms.toString('utf-8')
 };
+
+
+var arrEq = function(a, b){
+
+   if (a.length !== b.length){
+      return false
+   }
+
+   var onlyInA = a.filter(function(current){
+      return b.filter(function(current_b){
+            var b = false;
+            if (current_b.type === "service_enabler" ) {
+               b = ( current_b.cloudlet == current.cloudlet &&  current_b.app_id == current.app_id )
+            }
+            else{
+               b = ( current_b.access_type == current.access_type &&  current_b.access_level == current.access_level )
+            }
+            return current_b.ref == current.ref && current_b.type == current.type && b
+         }).length == 0
+   });
+
+   var onlyInB = b.filter(function(current){
+      return a.filter(function(current_a){
+            var b = false;
+            if (current_a.type === "service_enabler" ) {
+               b = ( current_a.cloudlet == current.cloudlet &&  current_a.app_id == current.app_id )
+            }
+            else{
+               b = ( current_a.access_type == current.access_type &&  current_a.access_level == current.access_level )
+            }
+            return current_a.ref == current.ref && current_a.type == current.type && b
+         }).length == 0
+   });
+
+   var result = onlyInA.concat(onlyInB);
+
+   return ( result.length === 0 ) ? true : false
+}
 
 
 /*================*/
@@ -32,7 +69,7 @@ module.exports = function(cmd_args) {
       req.session.authtoken = jwt.encode(payload, seckeyenc);
 
       if (req.session.token === undefined) {
-         res.render("openi_account")
+         res.render("peat_account")
       }
       else {
          //console.log("account.js", "req.session.token", req.session.token );
@@ -62,11 +99,11 @@ module.exports = function(cmd_args) {
                if (app_perms.hasOwnProperty("permissions")) {
                   //console.log("account.js", "2" );
                   //req.session.appPermJson = JSON.parse(new Buffer(req.query.appPerms, 'base64').toString('utf8'));
-                  if (deepEqual(user_app_perms, app_perms["permissions"])) {
+                  if (arrEq(user_app_perms, app_perms["permissions"])) {
                      res.redirect(req.query.redirectURL + '?OUST=' + req.session.token);
                   }
                   else {
-                     res.render("openi_account");
+                     res.render("peat_account");
                   }
 
                }
