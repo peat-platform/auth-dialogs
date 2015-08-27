@@ -69,7 +69,6 @@ var checkPerms = function(req, res, next) {
             res.send('/auth/permissions');
          }
       }, function () {
-         console.log("7")
          res.status(500).send('Internal error: getting app permissions failed');
       });
    });
