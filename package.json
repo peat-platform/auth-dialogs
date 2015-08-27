@@ -17,7 +17,7 @@
     "serve-favicon": "~2.2.0",
     "connect-redis": "",
     "redis": "",
-    "jsonwebtoken":"",
+    "jsonwebtoken":"5.0.5",
     "deep-equal"  : "",
     "commander"   : "",
     "m2node"      : "peat-platform/m2node"
